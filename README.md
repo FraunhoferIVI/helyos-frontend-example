@@ -9,10 +9,9 @@ docker network create control-tower-net
 
 docker-compose  -f ./helyos_backend/docker-compose.yml up -d 
 
+docker-compose  -f ./helyos_frontend/docker-compose.yml  up -d   
+
 docker-compose  -f ./simulators/docker-compose.yml up -d  
-
-docker-compose  -f ./hello_helyos_frontend/docker-compose.yml  up -d   
-
 ```
 
 ## Terminating application and keeping database
@@ -22,7 +21,7 @@ You must wait a couple of seconds between each command.
 ```
 docker-compose  -f ./simulators/docker-compose.yml down
 
-docker-compose  -f ./hello_helyos_frontend/docker-compose.yml down
+docker-compose  -f ./helyos_frontend/docker-compose.yml down
 
 docker-compose  -f ./helyos_backend/docker-compose.yml down
 
@@ -36,7 +35,7 @@ helyos_control_tower is the last one to be shut down.
 ```
 docker-compose  -f ./simulators/docker-compose.yml down
 
-docker-compose  -f ./hello_helyos_frontend/docker-compose.yml down
+docker-compose  -f ./helyos_frontend/docker-compose.yml down
 
 docker-compose  -f ./helyos_backend/docker-compose.yml down -v
 
