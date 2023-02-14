@@ -1,0 +1,123 @@
+/* Header */
+header {
+    background-color: #666;
+    margin-top: 0;
+    text-align: center;
+    color: white;
+}
+
+#title {
+    padding: 15px;
+    margin-top: 0;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* Flexboxes container */
+section {
+    /* display: -webkit-flex; */
+    display: flex;
+}
+
+/* Navigation menu */
+nav {
+    width: 20%;
+    height: 100%;
+    /* -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1; */
+    background: rgba(204, 204, 204, 0);
+    padding: 5px;
+}
+
+/* Navigation menu list */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 10px 0 0 0;
+    padding: 10px;
+    color: white;
+    background-color: rgb(86, 143, 121);
+
+}
+
+/* Select box */
+select {
+    width: auto;
+    margin: 5px 0 5px 0;
+}
+
+/* Buttons */
+.custom-btn {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 5px;
+    margin: 5px 5px 0 0;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(51, 92, 78);
+    display: inline-block;
+    cursor: pointer;
+}
+
+
+.custom-btn:hover {
+    background-color: rgb(245, 86, 12);
+}
+
+.custom-input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+/* Tool status information panel */
+.tool-status {
+    margin: 5px;
+    line-height: 1.5;
+}
+
+
+/* Mission dialogue */
+.mission-info {
+    word-wrap: break-word;
+    margin: 5px;
+}
+
+.mission-info-textarea {
+    margin-top: 5px;
+    height: 60px;
+    width: 100%;
+}
+
+/* Hint */
+.hint {
+    display: block;
+}
+
+/* Right volume */
+#map-interface {
+    /* -webkit-flex: 3;
+    -ms-flex: 3;
+    flex: 3; */
+    width: 80%;
+    height: 90vh;
+    /* background-color: rgb(63, 64, 65); */
+    padding: 0px;
+}
+
+/* Footer */
+footer {
+    background-color: #777;
+    padding: 5px;
+    text-align: center;
+    color: white;
+}

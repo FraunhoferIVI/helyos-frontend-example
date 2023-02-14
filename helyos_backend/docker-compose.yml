@@ -1,0 +1,118 @@
+version: '3.5'
+services:
+
+                
+# # ============================================================================
+# # ============================================================================
+# #                         DATABASE - POSTGRESS
+# # ============================================================================
+# # ============================================================================
+
+    db:
+        container_name: emons_db_host_address
+        image: postgres:10
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        environment:
+            POSTGRES_HOST_AUTH_METHOD: "trust"
+        networks:
+            - control-tower-net
+      
+
+# # ============================================================================
+# # ============================================================================
+# #                          MESSAGE-BROKER - RABBIT MQ 
+# # ============================================================================
+# # ============================================================================
+
+    local_message_broker:
+        image:  rabbitmq:3-management
+
+        ports: 
+            - 5672:5672          
+            - 15672:15672        
+        networks:
+            - control-tower-net
+
+            
+
+
+# # ============================================================================
+# # ============================================================================
+# #                         HELYOS CORE - MAIN CONTAINER
+# # ============================================================================
+# # ============================================================================
+
+
+    helyos_core:
+        # image: registry.gitlab.cc-asp.fraunhofer.de/helyos/helyos-release-registry/helyos_core:1.7.10
+        image: helyos2020/helyos_core:1.8.0
+        container_name: helyos_core
+
+        ports:
+            - 5002:5002  # websocket
+            - 5000:5000  # GraphQL
+            - 8080:8080  # HelyOS Dashboard
+
+
+        volumes:
+            - "./licenses:/licenses"
+            - ./initial_data/db_initial_data/:/db_initial_data/
+            - ./initial_data/helyos_keys/helyos_private.key:/.ssl_keys/helyos_private.key:ro
+
+        environment:
+            # DATABASE 
+            - PGUSER=postgres 
+            - PGDRIVER=QPSQL
+            - PGPASSWORD=null
+            - PGHOST=db 
+            - PGDATABASE=autotruck 
+            - PGPORT=5432
+
+            # RABBITMQ 
+            - ENCRYPT=none  # none | agent | helyos | helyos-agent
+            - RABBITMQHOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
+            - RABBITMQPORT=5672
+            - RBMQ_API_PORT=15672       
+
+
+            # RBMQ ACCOUNTS
+            - CREATE_RBMQ_ACCOUNTS=True
+            - RBMQ_ADMIN_USERNAME=${HELYOS_RBMQ_USERNAME} # set if CREATE_RBMQ_ACCOUNTS is True
+            - RBMQ_ADMIN_PASSWORD=${HELYOS_RBMQ_PASSWORD} # set if CREATE_RBMQ_ACCOUNTS is True
+            - RBMQ_USERNAME=${HELYOS_RBMQ_USERNAME}
+            - RBMQ_PASSWORD=${HELYOS_RBMQ_PASSWORD}
+            - ANY_AGENT_RBMQ_USERNAME=${AGENT_RBMQ_USERNAME}
+            - ANY_AGENT_RBMQ_PASSWORD=${AGENT_RBMQ_PASSWORD}
+            - POSITION_MARGIN=2
+
+            # AGENT => HELYOS
+            - AGENTS_UL_EXCHANGE=${AGENTS_UL_EXCHANGE}
+            - CHECK_IN_QUEUE=${CHECK_IN_QUEUE}
+            - AGENT_UPDATE_QUEUE=${AGENT_UPDATE_QUEUE}
+            
+            # HELYOS => AGENT
+            - AGENTS_DL_EXCHANGE=${AGENTS_DL_EXCHANGE}
+
+            # GRAPHQL VARIABLES
+            - GQLPORT=5000
+        networks:
+            - control-tower-net
+               
+        depends_on:
+            - db
+            - local_message_broker
+
+
+networks:
+    control-tower-net:
+        name: control-tower-net
+        external: true
+
+
+volumes:
+    postgres_data:
+        external: false
+

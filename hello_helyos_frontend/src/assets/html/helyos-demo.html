@@ -1,0 +1,96 @@
+<header>
+    <div id="title">Hello, helyOS!</div>
+</header>
+
+<section>
+    <nav>
+        <ul>
+            <li>
+                <div id="yard-menu">
+                    Yard:
+                    <select id="selected-yard" v-model="yardStore.selectedYard" @change="initYard"
+                        @mouseenter="hintMsg = 'helyosService.yard.list(condition?: Partial<H_Yard>): Promise<H_Yard[]>'"
+                        @mouseleave="hintMsg = 'HelyOS'">
+                        <option v-for="yard in yardStore.yards" :value="yard.id">{{ yard.name }}</option>
+                    </select>
+                    {{ yardStore.selectedYard }}
+                </div>
+            </li>
+            <li>
+                Upload a GeoJson file:
+                <div id="geojson-bar">
+                    <input type="file" id="upload-geojson-btn" class="custom-input" @change="uploadGeoJson">
+                    <label for="upload-geojson-btn" class="custom-btn"
+                        @mouseenter="hintMsg = 'L.geoJSON(<Object> geojson?, <GeoJSON options> options?).addTo(map)'"
+                        @mouseleave="hintMsg = 'HelyOS'">Choose a file</label>
+                    <!-- </div>
+                    <div> -->
+                    <button class="custom-btn" id="push-geojson-btn" @click="pushGeoJson"
+                        @mouseenter="hintMsg = 'helyosService.shapes.create(shape: Partial<H_Shape>): Promise<any>'"
+                        @mouseleave="hintMsg = 'HelyOS'">Push</button>
+                    <button class="custom-btn" id="delete-geojson-btn" @click="deleteGeoJson"
+                        @mouseenter="hintMsg = 'helyosService.shapes.delete(shapeId: any): Promise<any>'"
+                        @mouseleave="hintMsg = 'HelyOS'">Delete</button>
+                </div>
+            </li>
+            <li>
+                <div id="icon-bar">
+                    Upload a truck icon (.PNG):
+                    <label>
+                        <input type="file" id="upload-icon-btn" class="custom-input" @change="updateToolIcon">
+                        <label for="upload-icon-btn" class="custom-btn"
+                            @mouseenter="hintMsg = 'helyosService.tools.patch(tool: Partial<H_Tools>): Promise<any>'"
+                            @mouseleave="hintMsg = 'HelyOS'">Choose a file</label>
+                    </label>
+                </div>
+            </li>
+            <li id="tool-status-bar">
+                <div class="tool-status">Tool Status: {{ }}</div>
+                <div class="tool-status"
+                    @mouseenter="hintMsg = 'helyosService.socket.on(\'new_tool_poses\', (updates: any) => { console.log(updates); }'"
+                    @mouseleave="hintMsg = 'HelyOS'">
+                    {{ toolStore.selectedToolInfo }}
+                </div>
+            </li>
+            <li id="mission-bar">
+                <div class="mission-info">
+                    Mission:
+                    <select v-model="workProcessStore.selectedMission" id="selected-mission" @change="initMission"
+                        @mouseenter="hintMsg = 'helyosService.workProcessType.list(condition: Partial<H_WorkProcessType>): Promise<any>'"
+                        @mouseleave="hintMsg = 'HelyOS'">
+                        <option v-for="wpType in workProcessStore.workProcessType" :value="wpType.name">
+                            {{ wpType.name }}
+                        </option>
+                        <option></option>
+                    </select>
+                    {{ workProcessStore.selectedMission }}
+                </div>
+                <div class="mission-info">
+                    <div>Request: <br>{{ requestMsg }}</div>
+                    <textarea v-model="requestMsg" class="mission-info-textarea" contenteditable> </textarea>
+                </div>
+                <div class="mission-info">
+                    <div>Setting: <br>{{ settingMsg }}</div>
+                    <textarea v-model="settingMsg" class="mission-info-textarea"> </textarea>
+                </div>
+                <div class="mission-info">
+                    <button @click="createMission" class="custom-btn"
+                        @mouseenter="hintMsg = 'helyosService.workProcess.create(workProcess: Partial<H_WorkProcess>): Promise<any>'"
+                        @mouseleave="hintMsg = 'HelyOS'">Dispatch</button>
+                </div>
+            </li>
+            <li id="hint">
+                Hints:
+                <div>{{ hintMsg }}</div>
+            </li>
+        </ul>
+    </nav>
+
+    <div id="map-interface">
+        <Map ref="mapRef"></Map>
+    </div>
+</section>
+
+<footer>
+    <p>Footer</p>
+</footer>

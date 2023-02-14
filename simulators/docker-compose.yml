@@ -1,0 +1,54 @@
+version: '3.5'
+services:
+
+
+# # ============================================================================
+# # ============================================================================
+    # #                         HELYOS AGENT 
+# # ============================================================================
+# # ============================================================================
+
+
+    agent_simulator:
+        image: helyos2020/helyos_agent_simulator:0.1.0
+
+        volumes:
+            - ./custom-geometry.json:/app/geometry.json
+            
+        environment:
+
+            # AGENT ID
+            - UUID=Bb34069fc5-fdgs-434b-b87e-f19c5435113 
+            - PATH_ALGORITHM=straight_to_destination  # fixed | stepped-path | straight_to_destination | autotruck-path | clothoid_to_destination
+            - NAME='MY TRUCK'
+            # - X0=0
+            - X0=51.04745364968041 #latitude
+            # - Y0=0
+            - Y0=13.741703018090716 #longitude
+            - ORIENTATION=0
+            - VELOCITY=1.8 
+
+            # RABBITMQ 
+            - ENCRYPT=none  # none | agent | helyos | helyos-agent
+            - RABBITMQHOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
+            - RABBITMQPORT=5672
+
+            # RBMQ ACCOUNT
+            - RBMQ_USERNAME=${HELYOS_RBMQ_USERNAME}
+            - RBMQ_PASSWORD=${HELYOS_RBMQ_PASSWORD}
+            # OR
+            - REGISTRATION_TOKEN=0000-0000-0000-0000-0000
+
+        networks:
+            - control-tower-net
+               
+
+
+
+networks:
+    control-tower-net:
+        name: control-tower-net
+        external: true
+
+
+
