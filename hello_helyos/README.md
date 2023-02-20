@@ -1,4 +1,4 @@
-# Vue3-TypeScript & helyOS demo
+# Frontend App of helyOS
 
 This is a simple web application demo of an autonomous driving control station built within helyOS framework. The tutorial of how to built this application can be found by [helyOS-app-tutorial](https://wjppppp-helyos-helloworld.readthedocs.io/en/latest/).
 

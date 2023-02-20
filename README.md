@@ -23,7 +23,7 @@ To display main features of helyOS, this repository build a minimalistic web app
 
 ## 3. Build
 
-To install this hello helyOS app, run the following commands:
+To install this hello helyOS app, make sure you have docker installed, and then run the following commands:
 
 ### Starting the application
 
@@ -96,3 +96,4 @@ Features included in hello helyOS:
 
 ## Author
 - [Jiapan Wang](https://github.com/Wjppppp)
+- [Carlos E. Viol Barbosa](https://github.com/cviolbarbosa)
