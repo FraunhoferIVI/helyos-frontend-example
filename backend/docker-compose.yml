@@ -47,7 +47,6 @@ services:
 
 
     helyos_core:
-        # image: registry.gitlab.cc-asp.fraunhofer.de/helyos/helyos-release-registry/helyos_core:1.7.10
         image: helyos2020/helyos_core:1.8.0
         container_name: helyos_core
 

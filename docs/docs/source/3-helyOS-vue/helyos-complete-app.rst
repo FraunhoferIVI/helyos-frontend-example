@@ -245,7 +245,38 @@ Make sure to initialize helyOS connection and data fetching after login token co
 
 *./components/Login.vue*
 
-.. code:: typescript
+.. code::
+
+    <template>
+        <div class="login-form">
+            <h1>Welcome to helyOS hello-world application</h1>
+            <div>Username:
+                <input type="text" v-model="loginForm.username" placeholder="user name" />
+            </div>
+            <div>Password:
+                <input type="password" v-model="loginForm.password" placeholder="password" />
+            </div>
+            <button @click="login">Login</button>
+        </div>
+    </template>
+
+    <script setup lang="ts">
+    import { ref } from 'vue'
+    import { useUserStore, type User } from '@/stores/user-store';
+    import { useRouter } from 'vue-router'
+    import * as HS from '@/services/helyos-service';
+
+    // define loginForm
+    const loginForm = ref({
+        username: '',
+        password: '',
+        token: ''
+    } as User);
+
+    // define userStore
+    const userStore = useUserStore();
+    // define router
+    const router = useRouter();
 
     // login
     const login = async () => {
@@ -272,6 +303,33 @@ Make sure to initialize helyOS connection and data fetching after login token co
             alert("Incorrect username or password!")
         }
     }
+
+    defineExpose({
+        login,
+    })
+
+    </script>
+
+    <style scoped>
+    .login-form {
+        background-color: lightgray;
+        margin: auto;
+        width: 50%;
+        border: 3px solid green;
+        padding: 10px;
+        text-align: center;
+        /* padding: 20%; */
+    }
+
+    .login-form input {
+        margin: 10px;
+    }
+
+    .login-form button {
+        margin: 10px;
+    }
+    </style>
+
 
 Then, the browser will route to another component *Helyos.vue*, which is the main helyOS interface:
 
@@ -325,24 +383,12 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
     // initialize tools layer
     const initTools = () => {
         console.log(yardStore.selectedYard);
-        
+
         const tools = toolStore.filterToolByYard(yardStore.selectedYard);
-        if (yardStore.selectedYard === "4") { // LatLon format tools
-            console.log("tools in current yard", tools);
-            tools.forEach((tool) => {
-                mapRef.value.toolMarker(tool);
-            })
-        } else { // MM format tools
-            console.log("tools in current yard", tools);
-            tools.forEach((tool) => {
-                if (tool.dataFormat === "trucktrix-vehicle") {
-                    // convert trucktrix format tool to latlng format
-                    tool = toolStore.convertToolToLatLng(tool);
-                    // console.log(tool);                
-                }
-                mapRef.value.toolMarker(tool);
-            })
-        }
+        console.log("tools in current yard", tools);
+        tools.forEach((tool) => {
+            mapRef.value.toolMarker(tool);
+        })
     }
 
     // watch tool status
@@ -400,28 +446,12 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
     const initShapes = () => {
         // get shapes from shape store
         const shapes = shapeStore.filterShapeByYard(yardStore.selectedYard);
-        if (yardStore.selectedYard === "4") { // geojson format shapes
-            console.log("shapes in current yard", shapes);
+        // if (yardStore.selectedYard === "4") { // geojson format shapes
+        console.log("shapes in current yard", shapes);
 
-            shapes.forEach((shape) => {
-                mapRef.value.geoJsonDisplay(shape.data);
-            })
-        } else {
-            const currentYard = yardStore.getCurrentYard();
-
-            // trucktrix format shapes            
-            const trucktrixShape = shapes.filter((shapeTemp) => {
-                return shapeTemp.isObstacle === true || shapeTemp.type === "obstacle";
-            })
-            console.log("shapes in current yard", trucktrixShape);
-
-            // convert trucktrix format shapes to latlng shape
-            trucktrixShape.forEach((shape) => {
-                const shapeLatLng = HS.helyosService.convertMMtoLatLng(currentYard[0].lat, currentYard[0].lon, shape.geometry.points);
-                // display latlng shape as polygon on the map
-                mapRef.value.addPolygon(shapeLatLng);
-            })
-        }
+        shapes.forEach((shape) => {
+            mapRef.value.geoJsonDisplay(shape.data);
+        })
 
         // clear temporary geojson object
         geoJsonObj.value = undefined;
@@ -484,10 +514,7 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
         console.log("mission", workProcessStore.selectedMission); // workProcessType.name
         switch (workProcessStore.selectedMission) {
             case "driving":
-                requestMsg.value = "{\"x\": 52074.53648810991, \"y\": 17535.85365998155, \"anchor\": \"front\", \"orientation\": 3130.1, \"tool_id\": 2 }";
-                break;
-            case "my_driving":
-                requestMsg.value = "{\"results\": [{\"tool_id\": 4, \"result\": { \"destination\": [13.745160624591588, 51.049490378619204]}}]}"
+                requestMsg.value = "{\"results\": [{\"tool_id\": 1, \"result\": { \"destination\": [13.745160624591588, 51.049490378619204]}}]}";
                 break;
             default:
                 requestMsg.value = "{}";
