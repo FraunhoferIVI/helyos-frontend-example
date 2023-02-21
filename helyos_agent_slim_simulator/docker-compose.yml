@@ -10,7 +10,7 @@ services:
 
 
     agent_simulator:
-        image: helyos2020/helyos_agent_simulator:0.1.0
+        image: helyos2020/helyos_agent_slim_simulator:0.2.0
 
         volumes:
             - ./custom-geometry.json:/app/geometry.json
@@ -22,9 +22,9 @@ services:
             - PATH_ALGORITHM=straight_to_destination  # fixed | stepped-path | straight_to_destination | autotruck-path | clothoid_to_destination
             - NAME='MY TRUCK'
             # - X0=0
-            - X0=51.04745364968041 #latitude
+            - X0=13.741703018090716 #longitude
             # - Y0=0
-            - Y0=13.741703018090716 #longitude
+            - Y0=51.04745364968041 #latitude
             - ORIENTATION=0
             - VELOCITY=1.8 
 

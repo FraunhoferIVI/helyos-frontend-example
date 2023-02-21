@@ -59,7 +59,7 @@ services:
         volumes:
             - "./licenses:/licenses"
             - ./initial_data/db_initial_data/:/db_initial_data/
-            - ./initial_data/helyos_keys/helyos_private.key:/.ssl_keys/helyos_private.key:ro
+            - ./initial_data/helyos_keys/helyos_example_private.key:/.ssl_keys/helyos_private.key:ro
 
         environment:
             # DATABASE 

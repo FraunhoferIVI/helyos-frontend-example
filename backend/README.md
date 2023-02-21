@@ -1,4 +1,4 @@
-# helyOS-Emons yard automation demonstration. 
+# helyOS Backend
  Use the docker-compose.yml as a template to your own yard automation project.
 
  ## Core features

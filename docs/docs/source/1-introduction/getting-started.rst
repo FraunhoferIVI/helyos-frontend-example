@@ -87,7 +87,7 @@ To spin up the server you must use the following commands::
     > docker network create control-tower-net
     > docker-compose -f ./docker-compose.yml up -d
 
-To stop your type::
+To spin down your container::
 
     > docker-compose -f ./docker-compose.yml down
 

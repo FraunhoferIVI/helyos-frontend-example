@@ -177,7 +177,7 @@ const initMission = () => {
     console.log("mission", workProcessStore.selectedMission); // workProcessType.name
     switch (workProcessStore.selectedMission) {
         case "driving":
-            requestMsg.value = "{\"results\": [{\"tool_id\": 1, \"result\": { \"destination\": [13.745160624591588, 51.049490378619204]}}]}";
+            requestMsg.value = "{\"results\": [{\"tool_id\": 1, \"result\": { \"destination\": { \"x\": 13.745160624591588, \"y\": 51.049490378619204, \"orientations\":[0,0] }}}]}";
             break;
         default:
             requestMsg.value = "{}";
