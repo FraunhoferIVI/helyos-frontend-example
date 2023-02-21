@@ -66,59 +66,46 @@ in SFC format with ``Composition API``:
     </style>
 
 
-Install helyOS
-^^^^^^^^^^^^^^
-To develop within helyOS, you have to install helyOS core as the backend that receives mission requests from fontend and use microservices to transform these requests 
-in vehicles assignments. The easiest way to run helyOS locally is by using the docker image. The docker image can run locally or be deployed in a cloud provider. This tutorial 
-will guide you how to run helyOS locally by using docker image. Make sure you install `Docker <https://www.docker.com/>`_ before the following installation steps:
+Set the Backend
+^^^^^^^^^^^^^^^
+To develop within helyOS, you need a running helyOS backend to receive mission requests and dispatch in vehicles assignments. 
 
-Prepare your docker by logging into the repository of FraunhoferIVI with the given token::
+If you do not have access to a helyOS server, you can run your own locally by using the helyos_core docker image. This tutorial will guide you how to run helyOS 
+locally by using docker image. Make sure you install `Docker <https://www.docker.com/>`_ before the following installation steps:
 
-    needs token permission
+You will need the three images to run a helyOS backend.:
 
-Clone the repository helyOS_traning::
+1. The helyos_core image that communicates with your app. 
+2. The official image of the postgres database, where the helyOS stores its data.
+3. The official image of the rabbitmq:3-management, which will be the message broker to deliver the assignment to the vehicles (or vehicle simulators).
 
-    needs repository permission
+The easiest way to run these images and set the communication between their services is by using a docker-compose. You can find the docker-compose file with the 
+correct configurations in the folder backend: *./backend/*
 
-Please read the instructions in ``README.md`` before running containers. To start the application, you have to run the following commands::
+To spin up the server you must use the following commands::
 
     > docker network create control-tower-net
-    > docker-compose  -f ./deployment/helyos_control_tower/docker-compose.yml up -d 
-    > docker-compose  -f ./deployment/agent_simulators/docker-compose.yml up -d  
-    > docker-compose  -f ./deployment/autotruck-webdemo/docker-compose.yml  up -d
+    > docker-compose -f ./docker-compose.yml up -d
 
-.. note:: 
-    Remember to wait some seconds between commands. If you use docker with linux, you may have to enter each folder under *./deployment* to run the ``docker-compose``.
+To stop your type::
 
-Now you should have three helyOS containers running:
+    > docker-compose -f ./docker-compose.yml down
 
-- **helyos_control_tower**: includes helyOS core, database and rabbitMQ
-- **agent_simulators**: simple agents that simulates trucks running the HAC
-- **autotruck-webdemo**: a generic implementation of yard automation web app
+Using Vehicle Simulators
+^^^^^^^^^^^^^^^^^^^^^^^^
+When developing your application, you most probably will not have actual vehicles (agents) to evaluate it. Therefore, you will need agent simulators to mock the behavior of your vehicles within the application. 
 
-When helyOS core ia running, with the username and password from *./deployment/helyos_control_tower/README.md*, you can access helyOS dashboard, webdemo application, 
-GraphiQL and RabbitMQ management:
+You can develop your own simulators using the python library **helyOS-agent-sdk**, or you can use the agent slim simulator as docker image: agent_slim_simulator.
 
-- helyOS dashboard (http://localhost:8080): manage helyOS core, and check system logs
-- helyOS webdemo (http://localhost:3080): a generic implementation of yard automation web app
-- PostGraphiQL (http://localhost:5000/graphiql): database
-- RabbitMQ management (http://localhost:15672/#/): username and password can be found from *./deployment/helyos_control_tower/.env*
+You find the docker-compose to run the simulator in the folder: *./helyos_agent_slim_simulator*
 
-If you install helyOS successfully, you will see the following interfaces:
+To run::
 
-.. figure:: ./img/helyos_webdemo.jpg
-    :figwidth: 500pt
-    :align: center
+    > docker-compose -f ./docker-compose.yml up -d
 
-    helyOS Web Demo
+.. note::
 
-.. figure:: ./img/helyos_dashboard.jpg
-    :figwidth: 500pt
-    :align: center
-
-    helyOS Dashboard (API key needed)
-
-Now you have deployed helyOS core as backend on your device! Keep going, you will learn how to build your first helyOS app.
+    It is important to run the simulator only after the helyOS server finishes its boot procedure.
 
 First helyOS Frontend Application
 ---------------------------------

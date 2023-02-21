@@ -51,7 +51,6 @@ docker-compose  -f ./hello_helyos/docker-compose.yml down
 docker-compose  -f ./backend/docker-compose.yml down
 
 docker network rm control-tower-net
-
 ```
 
 *backend* is the last one to be shut down.
@@ -65,7 +64,6 @@ docker-compose  -f ./hello_helyos/docker-compose.yml down
 docker-compose  -f ./backend/docker-compose.yml down -v
 
 docker network rm control-tower-net
-
 ```
 
 ## 4. Demo
@@ -96,4 +94,6 @@ Features included in hello helyOS:
 
 ## Author
 - [Jiapan Wang](https://github.com/Wjppppp)
-- [Carlos E. Viol Barbosa](https://github.com/cviolbarbosa)
+
+## License
+This project is licensed under the MIT License
