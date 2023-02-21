@@ -1,17 +1,12 @@
 # helyOS-Emons yard automation demonstration. 
  Use the docker-compose.yml as a template to your own yard automation project.
 
-
  ## Core features
   * Serving database CRUD operations via GraphQL query language.
   * Registration of vehicles (agents) via RabbitMQ message broker.
   * Assignment of user-triggered processes to one or several services for path calculation (configurable using dashboard).
   * Collection of path calculations and delivering to agents via RabbitMQ (configurable using dashboard). 
 
- ## Configure login for container registry access
-```
-docker login registry.gitlab.cc-asp.fraunhofer.de 
-```
 
  ## To start
  
