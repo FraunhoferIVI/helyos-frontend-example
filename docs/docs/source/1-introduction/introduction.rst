@@ -50,7 +50,8 @@ Here are some useful links which could be helpful during the tutorial.
 - `TypeScript <https://www.typescriptlang.org/>`_.
 - `Leaflet Map <https://leafletjs.com/>`_.
 - `helyOS JavaScript SDK <https://github.com/FraunhoferIVI/helyOS-javascript-sdk>`_.
-- `helyOS Agent SDK <https://pypi.org/project/helyos-agent-sdk/>`_.
+- `helyOS Agent SDK <https://github.com/FraunhoferIVI/helyOS-agent-sdk>`_.
 - `helyOS dashboard <http://localhost:8080>`_.
-- `helyOS Web Demo <http://localhost:3080>`_.
 - `Docker docs <https://docs.docker.com/>`_.
+- `postgres database <https://hub.docker.com/_/postgres>`_.
+- `rabbitmq:3-management <https://hub.docker.com/_/rabbitmq>`_

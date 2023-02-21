@@ -68,7 +68,7 @@ in SFC format with ``Composition API``:
 
 Set the Backend
 ^^^^^^^^^^^^^^^
-To develop within helyOS, you need a running helyOS backend to receive mission requests and dispatch in vehicles assignments. 
+To develop within helyOS, you need a running helyOS backend to receive mission requests and dispatch vehicles assignments. 
 
 If you do not have access to a helyOS server, you can run your own locally by using the helyos_core docker image. This tutorial will guide you how to run helyOS 
 locally by using docker image. Make sure you install `Docker <https://www.docker.com/>`_ before the following installation steps:
@@ -76,8 +76,8 @@ locally by using docker image. Make sure you install `Docker <https://www.docker
 You will need the three images to run a helyOS backend.:
 
 1. The helyos_core image that communicates with your app. 
-2. The official image of the postgres database, where the helyOS stores its data.
-3. The official image of the rabbitmq:3-management, which will be the message broker to deliver the assignment to the vehicles (or vehicle simulators).
+2. The official image of the `postgres database <https://hub.docker.com/_/postgres>`_, where the helyOS stores its data.
+3. The official image of the `rabbitmq:3-management <https://hub.docker.com/_/rabbitmq>`_, which will be the message broker to deliver the assignment to the vehicles (or vehicle simulators).
 
 The easiest way to run these images and set the communication between their services is by using a docker-compose. You can find the docker-compose file with the 
 correct configurations in the folder backend: *./backend/*
@@ -95,7 +95,7 @@ Using Vehicle Simulators
 ^^^^^^^^^^^^^^^^^^^^^^^^
 When developing your application, you most probably will not have actual vehicles (agents) to evaluate it. Therefore, you will need agent simulators to mock the behavior of your vehicles within the application. 
 
-You can develop your own simulators using the python library **helyOS-agent-sdk**, or you can use the agent slim simulator as docker image: agent_slim_simulator.
+You can develop your own simulators using the python library `helyOS-agent-sdk <https://github.com/FraunhoferIVI/helyOS-agent-sdk>`_, or you can use the agent slim simulator as docker image: agent_slim_simulator.
 
 You find the docker-compose to run the simulator in the folder: *./helyos_agent_slim_simulator*
 

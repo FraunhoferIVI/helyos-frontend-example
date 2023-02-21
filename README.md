@@ -87,7 +87,7 @@ Features included in hello helyOS:
 
 - [helyOS Dashboard](http://localhost:8080)
 - [Hello helyOS](http://localhost:5174)
-- [Hello helyOS Tutorial](https://readthedocs.org/projects/helyos-app-tutorial/)
+- [Hello helyOS Tutorial](https://fraunhofer-ivi-helyos-frontend-example.readthedocs.io/en/latest/index.html)
 - [helyOS JavaScript SDK](https://github.com/FraunhoferIVI/helyOS-javascript-sdk)
 - [helyOS Agent SDK](https://pypi.org/project/helyos-agent-sdk/)
 

@@ -1,6 +1,6 @@
 # Frontend App of helyOS
 
-This is a simple web application demo of an autonomous driving control station built within helyOS framework. The tutorial of how to built this application can be found by [helyOS-app-tutorial](https://wjppppp-helyos-helloworld.readthedocs.io/en/latest/).
+This is a simple web application demo of an autonomous driving control station built within helyOS framework. The tutorial of how to built this application can be found by [helyOS-app-tutorial](https://fraunhofer-ivi-helyos-frontend-example.readthedocs.io/en/latest/index.html).
 
 ## 1. Environment
 

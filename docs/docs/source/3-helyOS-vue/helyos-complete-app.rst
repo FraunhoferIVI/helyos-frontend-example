@@ -557,4 +557,4 @@ figure shown.
 
     helyOS hello world app
 
-The project built by this tutorial can be accessed by `helyOS hello world <https://gitlab-intern.ivi.fraunhofer.de/helyos/helyos-web-apps/helyos_hello_world>`_.
+The complete hello helyOS project can be accessed by `helyOS hello world <https://github.com/FraunhoferIVI/helyos-frontend-example>`_.
