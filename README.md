@@ -50,10 +50,13 @@ docker-compose  -f ./helyos_agent_slim_simulator/docker-compose.yml up -d
 ### Terminating application and keeping database
 
 - To terminate the hello helyOS web app
+    
     `docker-compose  -f ./hello_helyos/docker-compose.yml down`
 - To terminate the slim agent simulator
+    
     `docker-compose  -f ./helyos_agent_slim_simulator/docker-compose.yml down`
 - To terminate the backend (helyOS core)
+    
     `docker-compose  -f ./backend/docker-compose.yml down`
 
 *backend* is the last one to be shut down.
