@@ -13,15 +13,16 @@ To display main features of helyOS, this repository build a minimalistic web app
 - *./helyos_agent_slim_simulator*: The  docker image of helyOS agent simulator
 - *./docs*: The tutorial of hello helyOS
 
-The tutorial of this project can be visited via [Front App for helyOS](https://fraunhofer-ivi-helyos-frontend-example.readthedocs.io/en/latest/index.html).
+The tutorial documentation can be visited at [Front App for helyOS](https://fraunhofer-ivi-helyos-frontend-example.readthedocs.io/en/latest/index.html).
 
-## 2. Prior Knowledge
-
+## 2. Development
+Hello helyOS uses the following technologies or knowledge:
 - Software as a service (SaaS)
 - Web development (html, CSS, JavaScript)
 - TypeScript
-- Vue.js (or React, Angular, …)
+- Vue.js
 - Web map API (leaflet map)
+- Docker
 
 ## 3. Installation
 
