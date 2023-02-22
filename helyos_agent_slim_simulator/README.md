@@ -1,5 +1,5 @@
 # helyOS Agent Slim Simulator
-This is a docker image of helyOS agent slim simulator. Configurations can be set in *./docker-compose.yml*.
+This is a docker image of a helyOS agent slim simulator. Configurations can be set in *./docker-compose.yml*.
 
 ## To start
 ```
