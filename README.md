@@ -35,7 +35,7 @@ docker-compose  -f ./hello_helyos/docker-compose.yml  up -d
 ```
 Once it is running, you can access to hello helyOS web app via  http://localhost:5174/. Login in with the admin account {"username": "admin", "password": "admin"}, or other accounts registered at helyOS Dashboard.
 
-### Set the Backend
+### Setting the Backend
 If you can't login in, check if you have helyOS core running. If not, run the following commands to install helyOS core as backend:
 ```
 docker-compose  -f ./backend/docker-compose.yml up -d 
