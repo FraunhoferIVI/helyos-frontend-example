@@ -5,4 +5,4 @@ This tutorial introduces how to build an autonomous driving web application with
 
 Read the tutorial here:
 
-https://helyos-app-tutorial.readthedocs.io/en/latest/
+https://fraunhofer-ivi-helyos-frontend-example.readthedocs.io/en/latest/index.html
