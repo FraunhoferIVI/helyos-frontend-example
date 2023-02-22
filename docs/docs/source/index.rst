@@ -10,7 +10,7 @@ autonomous driving control station application is expected like the following fi
 
    helyOS hello world app
 
-The complete hello helyOS project can be accessed by `helyOS hello world <https://github.com/FraunhoferIVI/helyos-frontend-example>`_.
+The complete hello helyOS project can be accessed by `helyOS frontend example <https://github.com/FraunhoferIVI/helyos-frontend-example>`_.
 
 .. toctree::
    :maxdepth: 2
