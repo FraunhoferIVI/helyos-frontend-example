@@ -13,6 +13,8 @@ To display main features of helyOS, this repository build a minimalistic web app
 - *./helyos_agent_slim_simulator*: The  docker image of helyOS agent simulator
 - *./docs*: The tutorial of hello helyOS
 
+The tutorial of this project can be visited via [Front App for helyOS](https://fraunhofer-ivi-helyos-frontend-example.readthedocs.io/en/latest/index.html).
+
 ## 2. Prior Knowledge
 
 - Software as a service (SaaS)
@@ -23,46 +25,44 @@ To display main features of helyOS, this repository build a minimalistic web app
 
 ## 3. Build
 
-To install this hello helyOS app, make sure you have docker installed, and then run the following commands:
+To install this hello helyOS app, make sure you have docker installed, and then run the following commands.
 
 ### Starting the application
-
-Before building the frontend app, make sure you have backend (**helyOS core**) installed.
- 
+To start hello helyOS app docker container, run the following commands:
 ```
 docker network create control-tower-net
-
-docker-compose  -f ./backend/docker-compose.yml up -d 
-
 docker-compose  -f ./hello_helyos/docker-compose.yml  up -d   
+```
+Once it is running, you can access to hello helyOS web app via  http://localhost:5174/. Login in with the admin account {"username": "admin", "password": "admin"}, or other accounts registered at helyOS Dashboard.
 
+### Set the Backend
+If you can't login in, check if you have helyOS core running. If not, run the following commands to install helyOS core as backend:
+```
+docker-compose  -f ./backend/docker-compose.yml up -d 
+```
+
+### Agent Simulator
+If you want to try a slim agent simulator, run the following commands:
+```
 docker-compose  -f ./helyos_agent_slim_simulator/docker-compose.yml up -d  
 ```
 
 ### Terminating application and keeping database
 
-You must wait a couple of seconds between each command.
-
-```
-docker-compose  -f ./helyos_agent_slim_simulator/docker-compose.yml down
-
-docker-compose  -f ./hello_helyos/docker-compose.yml down
-
-docker-compose  -f ./backend/docker-compose.yml down
-
-docker network rm control-tower-net
-```
+- To terminate the hello helyOS web app
+    `docker-compose  -f ./hello_helyos/docker-compose.yml down`
+- To terminate the slim agent simulator
+    `docker-compose  -f ./helyos_agent_slim_simulator/docker-compose.yml down`
+- To terminate the backend (helyOS core)
+    `docker-compose  -f ./backend/docker-compose.yml down`
 
 *backend* is the last one to be shut down.
 
-### Terminating application and reseting database
+### Terminating the whole application and reseting database
 ```
-docker-compose  -f ./helyos_agent_slim_simulator/docker-compose.yml down
-
 docker-compose  -f ./hello_helyos/docker-compose.yml down
-
+docker-compose  -f ./helyos_agent_slim_simulator/docker-compose.yml down
 docker-compose  -f ./backend/docker-compose.yml down -v
-
 docker network rm control-tower-net
 ```
 
