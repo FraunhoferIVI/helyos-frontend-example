@@ -1,5 +1,6 @@
 # [Hello helyOS](https://fraunhofer-ivi-helyos-frontend-example.readthedocs.io/en/latest/index.html)
 
+This tutorial aims to teach frontend developers how to build a Saas-based web application within helyOS framework.
 ## 1. Introduction
 
 helyOS is a framework to accelerate the development of yard autonomous projects. The helyOS framework contains three software components: helyOS core, helyOS Agent SDK, helyOS JavaScript SDK. 
