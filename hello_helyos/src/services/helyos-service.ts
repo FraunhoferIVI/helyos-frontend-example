@@ -123,10 +123,11 @@ export const patchTool = (tool: H_Tools) => {
 const toolSubscription = () => {
     const socket = helyosService.socket;
     const toolStore = useToolStore();
-    const yardStore = useYardStore();
-    socket.on('new_tool_poses', (updates: any) => {
 
+    socket.on('new_tool_poses', (updates: any) => {
         // console.log('new_tool_poses', updates); // Notifications from tool sensors.
+
+        // update poses into toolStore
         updates.forEach((agentUpdate: any) => {
             // console.log(agentUpdate);
             const agent = toolStore.tools.find(tool => tool.id === agentUpdate.toolId);
@@ -136,8 +137,6 @@ const toolSubscription = () => {
                 agent.y = agentUpdate.y;
                 agent.orientation = agentUpdate.orientation;
                 agent.sensors = agentUpdate.sensors;
-                agent.status = agentUpdate.status;
-                agent.dataFormat = "LatLng-vehicle";
             }
         })
         // console.log("tool store", toolStore.tools);
@@ -145,6 +144,16 @@ const toolSubscription = () => {
     });
     socket.on('change_tool_status', (updates: any) => {
         console.log('change_tool_status', updates); // Notifications from tools working status.
+
+        // update status into toolStore
+        updates.forEach((agentUpdate: any) => {
+            console.log(agentUpdate);
+            const agent = toolStore.tools.find(tool => tool.id === agentUpdate.id.toString());
+            if (agent) {
+                agent.status = agentUpdate.status;
+            }
+        })
+        // console.log("tool store", toolStore.tools);
     });
     socket.on('change_work_processes', (updates: any) => {
         console.log('change_work_processes', updates);  // Notifications from work processes status.

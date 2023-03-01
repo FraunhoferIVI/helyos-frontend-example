@@ -33,7 +33,7 @@ To install this hello helyOS app, make sure you have docker installed, and then 
 To start hello helyOS app, run the following commands:
 ```
 docker network create control-tower-net
-docker-compose  -f ./hello_helyos/docker-compose.yml  up -d   
+docker-compose  -f ./hello_helyos/docker-compose.yml up -d   
 ```
 Once it is running, you can access to hello helyOS web app via  http://localhost:5174/. Login in with the admin account {"username": "admin", "password": "admin"}, or other accounts registered at helyOS Dashboard.
 

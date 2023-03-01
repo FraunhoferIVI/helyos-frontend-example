@@ -114,7 +114,7 @@ const toolMarker = (tool: any) => {
 const updateMarkerLatLng = (tool: any, toolPose: any) => {
     // console.log(tool, toolPose);    
     const newLatLng = new L.LatLng(toolPose.lat, toolPose.lng);
-    tool.marker.slideTo(newLatLng, { duration: 1000 });
+    tool.marker.slideTo(newLatLng, { duration: 1000 });  
 };
 
 // update map view

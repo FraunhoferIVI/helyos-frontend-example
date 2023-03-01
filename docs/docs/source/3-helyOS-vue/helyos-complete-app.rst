@@ -512,14 +512,34 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
     const requestMsg = ref("{}");
     const initMission = () => {
         console.log("mission", workProcessStore.selectedMission); // workProcessType.name
+
         switch (workProcessStore.selectedMission) {
             case "driving":
-                requestMsg.value = "{\"results\": [{\"tool_id\": 1, \"result\": { \"destination\": [13.745160624591588, 51.049490378619204]}}]}";
+                if (!toolStore.selectedTool) {
+                    requestMsg.value = "{\"results\": [{\"tool_id\": , \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
+                } else if (!mapStore.onClickCoords) {
+                    requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
+                } else {
+                    requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + mapStore.onClickCoords.lng + ", \"y\":" + mapStore.onClickCoords.lat + ", \"orientations\":[0,0] }}}]}";
+                }
                 break;
             default:
                 requestMsg.value = "{}";
         }
     }
+
+    // watch map onClick latlng coordinates
+    const unwatchOnClickMap = watch(
+        () => mapStore.onClickCoords,
+        (coords) => {
+            if (!toolStore.selectedTool) {
+                alert("Please select a tool firstly!")
+            } else if (workProcessStore.selectedMission == "driving") {
+                requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + coords.lng + ", \"y\":" + coords.lat + ", \"orientations\":[0,0] }}}]}";
+            }
+            // console.log("coords", coords);
+        }
+    )
 
     // dispatch the mission
     const createMission = () => {
@@ -527,14 +547,17 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
         console.log("request", requestMsg.value);
         console.log("setting", settingMsg.value);
 
-        if (toolStore.selectedTool) {
-            workProcessStore.dispatchMission(Number(toolStore.selectedTool.id), yardStore.selectedYard, requestMsg.value, settingMsg.value);
-        } else {
+        if (!toolStore.selectedTool) {
             alert("Please select a tool firstly!")
+        } else if (workProcessStore.selectedMission == "") {
+            alert("Please select a mission!")
+        } else if (requestMsg.value === "{}") {
+            alert("Request must not be empty!")
+        } else {
+            workProcessStore.dispatchMission(Number(toolStore.selectedTool.id), yardStore.selectedYard, requestMsg.value, settingMsg.value);
         }
 
     }
-
 
     onMounted(() => {
         setTimeout(() => {

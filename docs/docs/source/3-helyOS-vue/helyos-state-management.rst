@@ -20,11 +20,12 @@ Leaflet Map
     import { ref } from 'vue'
 
     export const useLeafletMapStore = defineStore('map', ()=>{
-        // map view object
         const leafletMap = ref();
+        const onClickCoords = ref(); // the destination of driving mission
 
         return{
             leafletMap,
+            onClickCoords
         }
 
     })
@@ -76,10 +77,15 @@ Then, define a leaflet map component:
         leafletMap.value.on('click', (ev: any) => {
             let point = convertLatLngToMM(originLatLon.value.lat, originLatLon.value.lon, [[ev.latlng.lat, ev.latlng.lng]])
             console.log("Latlng: ", ev.latlng, "\nMM: ", point[0]);
+            
+            // coordinates panel
             clickedPoint.value = {
                 LatLng: ev.latlng,
                 MM: point[0]
             }
+
+            // the destination of driving mission
+            leafletMapStore.onClickCoords = ev.latlng
         })
     }
 

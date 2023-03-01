@@ -58,7 +58,7 @@ const unwatch = watch(
     (ifSubscription) => {
         // console.log("watching", ifsubscription);
         if (ifSubscription && yardStore.selectedYard) {
-
+            
             toolStore.tools.forEach((tool) => {
 
                 if ('marker' in tool) {
@@ -198,7 +198,7 @@ const unwatchOnClickMap = watch(
         } else if (workProcessStore.selectedMission == "driving") {
             requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + coords.lng + ", \"y\":" + coords.lat + ", \"orientations\":[0,0] }}}]}";
         }
-        console.log("coords", coords);
+        // console.log("coords", coords);
     }
 )
 
