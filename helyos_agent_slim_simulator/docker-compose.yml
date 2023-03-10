@@ -10,7 +10,7 @@ services:
 
 
     agent_simulator:
-        image: helyos2020/helyos_agent_slim_simulator:0.2.0
+        image: helyos2020/helyos_agent_slim_simulator:0.2.5
 
         volumes:
             - ./custom-geometry.json:/app/geometry.json
@@ -19,14 +19,15 @@ services:
 
             # AGENT ID
             - UUID=Bb34069fc5-fdgs-434b-b87e-f19c5435113 
-            - PATH_ALGORITHM=straight_to_destination  # fixed | stepped-path | straight_to_destination | autotruck-path | clothoid_to_destination
+            - PATH_TRACKER=perfect  # perfect | straight_to_destination | stanley
+            - ASSIGNMENT_FORMAT=destination  # fixed | trajectory | destination | autotruck-path
             - NAME='MY TRUCK'
             # - X0=0
             - X0=13.741703018090716 #longitude
             # - Y0=0
             - Y0=51.04745364968041 #latitude
             - ORIENTATION=0
-            - VELOCITY=1.8 
+            - VELOCITY=0.9 
 
             # RABBITMQ 
             - ENCRYPT=none  # none | agent | helyos | helyos-agent
