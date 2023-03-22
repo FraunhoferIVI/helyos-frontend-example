@@ -20,14 +20,14 @@ services:
             # AGENT ID
             - UUID=Bb34069fc5-fdgs-434b-b87e-f19c5435113 
             - PATH_TRACKER=perfect  # perfect | straight_to_destination | stanley
-            - ASSIGNMENT_FORMAT=destination  # fixed | trajectory | destination | autotruck-path
+            - ASSIGNMENT_FORMAT=trajectory  # fixed | trajectory | destination | autotruck-path
             - NAME='MY TRUCK'
             # - X0=0
             - X0=13.741703018090716 #longitude
             # - Y0=0
             - Y0=51.04745364968041 #latitude
             - ORIENTATION=0
-            - VELOCITY=0.9 
+            - VELOCITY=1
 
             # RABBITMQ 
             - ENCRYPT=none  # none | agent | helyos | helyos-agent

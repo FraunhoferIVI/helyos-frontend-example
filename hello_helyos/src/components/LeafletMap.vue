@@ -8,30 +8,74 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, toRaw } from 'vue';
 import "leaflet/dist/leaflet.css";
 import L, { type LatLngExpression } from "leaflet";
 import CheapRuler from "cheap-ruler";
-import { slideTo } from "leaflet.marker.slideto";
+import "leaflet.marker.slideto";
+import 'leaflet-rotatedmarker'
 import { useLeafletMapStore } from '@/stores/leaflet-map-store';
 import { useToolStore } from '@/stores/tool-store';
 
 
 const leafletMapStore = useLeafletMapStore(); // map store
-const leafletMap = ref(leafletMapStore.leafletMap); // map ref
+const leafletMap = ref(); // map ref
 const originLatLon = ref({ "lat": 51.0504, "lon": 13.7373 }); // yard 1
 const zoomLevel = 17;
+const toolMarkerLayer = new L.LayerGroup() // A layer group stores tool markers
+const polygonLayer = new L.LayerGroup() // A layer group stores map objects
 
 // initiate map
 const initMap = (): any => {
-    leafletMap.value = L.map("mapContainer").setView([originLatLon.value.lat, originLatLon.value.lon], zoomLevel);
-    // map layer
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // map layers
+    const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
-    }).addTo(leafletMap.value);
+    });
+
+    const esriImagery = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        id: 'ESRI/Imagery',
+        tileSize: 512,
+        zoomOffset: -1,
+        maxZoom: 19,
+        attribution: '© OpenStreetMap | ESRI'
+    });
+
+    // base map
+    const baseMaps = {
+        "ESRI/Imagery": esriImagery,
+        "OpenStreetMap": osm,
+    };
+
+    // map objects
+    const overlays = {
+        "helyOS Agents": toolMarkerLayer,
+        "Map Objects": polygonLayer,
+    }
+
+
+    // initiate map
+    leafletMap.value = L.map("mapContainer", {
+        zoomControl: false,
+        // zoomAnimation: false,
+        center: [originLatLon.value.lat, originLatLon.value.lon],
+        zoom: zoomLevel,
+        layers: [osm]
+    });
+
+    L.control.layers(baseMaps, overlays).addTo(toRaw(leafletMap.value));
+
+
     onClickCoord();
 };
+
+// update map view
+const updateMap = (originLat: number, originLon: number) => {
+    leafletMap.value.remove(); // Destroys current map and clears all related event listeners
+    initMap();
+    originLatLon.value = { lat: originLat, lon: originLon };
+    leafletMap.value.setView([originLatLon.value.lat, originLatLon.value.lon], zoomLevel);
+}
 
 // return two types coords of on click location
 const clickedPoint = ref();
@@ -72,58 +116,75 @@ const goHome = () => {
 
 // add GeoJson file
 const geoJsonDisplay = (geojsonObj: any) => {
-    const geoJsonLayer = L.layerGroup(); // A layer group stores geojson objects  
+    // const geoJsonLayer = L.layerGroup(); // A layer group stores geojson objects  
     // console.log(geojsonObj);
-    geoJsonLayer.addLayer(L.geoJSON(geojsonObj)).addTo(leafletMap.value);
+    polygonLayer.addLayer(L.geoJSON(geojsonObj)).addTo(toRaw(leafletMap.value));
 };
 
 // add polygon layer
 const addPolygon = (polygon: LatLngExpression[] | any) => {
-    const polygonLayer = L.layerGroup() // A layer group stores polygon layers   
-    polygonLayer.addLayer(L.polygon(polygon)).addTo(leafletMap.value);
+    // const polygonLayer = L.layerGroup() // A layer group stores polygon layers   
+    polygonLayer.addLayer(L.polygon(polygon)).addTo(toRaw(leafletMap.value));
 };
 
 // add tool marker layer
 const toolStore = useToolStore(); // Tool store
 const toolMarker = (tool: any) => {
-    // console.log("toolArray", toolArray);
-    const toolMarkerLayer = L.layerGroup() // A layer group stores tool markers
+    console.log("toolArray", tool);
+    // const toolMarkerLayer = L.layerGroup() // A layer group stores tool markers
 
-    if (tool.picture) {
-        const markerIcon = L.icon({
-            iconUrl: tool.picture,
-            iconSize: [32, 32]
+    if (tool.marker) { // marker existed
+        if (tool.picture) {
+            const markerIcon = L.icon({
+                iconUrl: tool.picture,
+                iconSize: [48, 48]
+            });
+            tool.marker.setIcon(markerIcon);
+        }
+
+        tool.marker.on('click', () => {
+            toolStore.selectedTool = tool;
+            toolStore.updateSelectedTool();
+            // console.log(toolStore.selectedTool);
         });
-        const toolCoord = { lat: tool.y, lng: tool.x }
-        tool.marker = L.marker(toolCoord).setIcon(markerIcon);
+
+        toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
+        toolMarkerLayer.addTo(toRaw(leafletMap.value));
+
+    } else { // marker not existed
+        if (tool.picture) {
+            const markerIcon = L.icon({
+                iconUrl: tool.picture,
+                iconSize: [48, 48]
+            });
+            const toolCoord = { lat: tool.y, lng: tool.x }
+            tool.marker = L.marker(toolCoord).setIcon(markerIcon);
+            tool.marker.setRotationOrigin('center center').setRotationAngle(tool.orientations[0]);
+        }
+        else {
+            const toolCoord = { lat: tool.y, lng: tool.x }
+            tool.marker = L.marker(toolCoord);
+            tool.marker.setRotationOrigin('center center').setRotationAngle(tool.orientations[0]);
+        }
+        tool.marker.on('click', () => {
+            toolStore.selectedTool = tool;
+            toolStore.updateSelectedTool();
+            // console.log(toolStore.selectedTool);
+        });
+        toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
+        toolMarkerLayer.addTo(toRaw(leafletMap.value));
     }
-    else {
-        const toolCoord = { lat: tool.y, lng: tool.x }
-        tool.marker = L.marker(toolCoord);
-    }
-    tool.marker.on('click', () => {
-        toolStore.selectedTool = tool;
-        toolStore.updateSelectedTool();
-        console.log(toolStore.selectedTool);
-    });
-    toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
-    toolMarkerLayer.addTo(leafletMap.value);;
+
 };
 
 // move marker to LatLng
 const updateMarkerLatLng = (tool: any, toolPose: any) => {
     // console.log(tool, toolPose);    
     const newLatLng = new L.LatLng(toolPose.lat, toolPose.lng);
-    tool.marker.slideTo(newLatLng, { duration: 1000 });  
+    tool.marker.setRotationAngle(tool.orientations[0]).slideTo(newLatLng, { duration: 1000 });  
 };
 
-// update map view
-const updateMap = (originLat: number, originLon: number) => {
-    leafletMap.value.remove(); // Destroys current map and clears all related event listeners
-    initMap();
-    originLatLon.value = { lat: originLat, lon: originLon };
-    leafletMap.value.setView([originLatLon.value.lat, originLatLon.value.lon], zoomLevel);
-}
+
 
 // Mount
 onMounted(() => {
