@@ -38,7 +38,7 @@ const login = async () => {
 
     // login in successfully
     if (helyosToken) {
-        loginForm.value.token = helyosToken;
+        loginForm.value.token = helyosToken.jwtToken;
         // store user information
         userStore.setUser(loginForm.value);
 

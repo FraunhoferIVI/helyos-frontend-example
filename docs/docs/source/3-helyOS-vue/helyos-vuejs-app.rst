@@ -94,7 +94,7 @@ TypeScript file *./services/helyos-service.ts*. Here is a basic example how to u
         const userStore = useUserStore();
         console.log("userStore", userStore.user);
 
-        if (userStore.user.token.jwtToken === helyosService.token) {
+        if (userStore.user.token === helyosService.token) {
             return helyosService.connect()
                 .then(connected => {
 
@@ -246,7 +246,7 @@ Create a new folder *./router* and a new typescript file *./router/index.ts*:
             component: Login
         },
         {
-            path: '/demo',
+            path: '/',
             name: 'demo',
             component: Helyos
         }
@@ -346,7 +346,7 @@ Create two different vue components *./components/Login.vue* and *./components/H
 
         // login in successfully
         if (helyosToken) {
-            loginForm.value.token = helyosToken;
+            loginForm.value.token = helyosToken.jwtToken;
             // store user information
             userStore.setUser(loginForm.value);
 
@@ -476,7 +476,7 @@ A complete project tree of this tutorial is shown below::
         │   └── store/
         │       ├── leaflet-map-store.ts // stores map ref()
         │       ├── shape-store.ts // stores shapes and provides push, delete shape operations
-        │       ├── tool-store.ts //stores tools and status information
+        │       ├── map-object-store.ts //stores tools and status information
         │       ├── user-store.ts // stores user information and jwtToken
         │       ├── work-process-store.ts // stores work process type and dispatch new work process
         │       └── yard-store.ts // stores yard information

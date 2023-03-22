@@ -20,11 +20,9 @@ Leaflet Map
     import { ref } from 'vue'
 
     export const useLeafletMapStore = defineStore('map', ()=>{
-        const leafletMap = ref();
-        const onClickCoords = ref(); // the destination of driving mission
+        const onClickCoords = ref(); // the coordinates of clicked point on map
 
         return{
-            leafletMap,
             onClickCoords
         }
 
@@ -46,29 +44,75 @@ Then, define a leaflet map component:
     </template>
 
     <script setup lang="ts">
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, toRaw } from 'vue';
     import "leaflet/dist/leaflet.css";
     import L, { type LatLngExpression } from "leaflet";
     import CheapRuler from "cheap-ruler";
+    import "leaflet.marker.slideto";
+    import 'leaflet-rotatedmarker'
     import { useLeafletMapStore } from '@/stores/leaflet-map-store';
     import { useToolStore } from '@/stores/tool-store';
 
 
     const leafletMapStore = useLeafletMapStore(); // map store
-    const leafletMap = ref(leafletMapStore.leafletMap); // map ref
-    const originLatLon = ref({ "lat": 51.053197, "lon": 13.703106 }); // yard 1
+    const leafletMap = ref(); // map ref
+    const originLatLon = ref({ "lat": 51.0504, "lon": 13.7373 }); // yard 1
     const zoomLevel = 17;
+    const toolMarkerLayer = new L.LayerGroup() // A layer group stores tool markers
+    const polygonLayer = new L.LayerGroup() // A layer group stores map objects
 
     // initiate map
     const initMap = (): any => {
-        leafletMap.value = L.map("mapContainer").setView([originLatLon.value.lat, originLatLon.value.lon], zoomLevel);
-        // map layer
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // map layers
+        const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap'
-        }).addTo(leafletMap.value);
+        });
+
+        const esriImagery = L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            id: 'ESRI/Imagery',
+            tileSize: 512,
+            zoomOffset: -1,
+            maxZoom: 19,
+            attribution: '© OpenStreetMap | ESRI'
+        });
+
+        // base map
+        const baseMaps = {
+            "ESRI/Imagery": esriImagery,
+            "OpenStreetMap": osm,
+        };
+
+        // map objects
+        const overlays = {
+            "helyOS Agents": toolMarkerLayer,
+            "Map Objects": polygonLayer,
+        }
+
+
+        // initiate map
+        leafletMap.value = L.map("mapContainer", {
+            zoomControl: false,
+            // zoomAnimation: false,
+            center: [originLatLon.value.lat, originLatLon.value.lon],
+            zoom: zoomLevel,
+            layers: [osm]
+        });
+
+        // layer control
+        L.control.layers(baseMaps, overlays).addTo(toRaw(leafletMap.value));
+
+
         onClickCoord();
     };
+
+    // update map view
+    const updateMap = (originLat: number, originLon: number) => {
+        leafletMap.value.remove(); // Destroys current map and clears all related event listeners
+        initMap();
+        originLatLon.value = { lat: originLat, lon: originLon };
+        leafletMap.value.setView([originLatLon.value.lat, originLatLon.value.lon], zoomLevel);
+    }
 
     // return two types coords of on click location
     const clickedPoint = ref();
@@ -77,7 +121,7 @@ Then, define a leaflet map component:
         leafletMap.value.on('click', (ev: any) => {
             let point = convertLatLngToMM(originLatLon.value.lat, originLatLon.value.lon, [[ev.latlng.lat, ev.latlng.lng]])
             console.log("Latlng: ", ev.latlng, "\nMM: ", point[0]);
-            
+
             // coordinates panel
             clickedPoint.value = {
                 LatLng: ev.latlng,
@@ -86,6 +130,7 @@ Then, define a leaflet map component:
 
             // the destination of driving mission
             leafletMapStore.onClickCoords = ev.latlng
+
         })
     }
 
@@ -108,58 +153,75 @@ Then, define a leaflet map component:
 
     // add GeoJson file
     const geoJsonDisplay = (geojsonObj: any) => {
-        const geoJsonLayer = L.layerGroup(); // A layer group stores geojson objects  
+        // const geoJsonLayer = L.layerGroup(); // A layer group stores geojson objects  
         // console.log(geojsonObj);
-        geoJsonLayer.addLayer(L.geoJSON(geojsonObj)).addTo(leafletMap.value);
+        polygonLayer.addLayer(L.geoJSON(geojsonObj)).addTo(toRaw(leafletMap.value));
     };
 
     // add polygon layer
     const addPolygon = (polygon: LatLngExpression[] | any) => {
-        const polygonLayer = L.layerGroup() // A layer group stores polygon layers   
-        polygonLayer.addLayer(L.polygon(polygon)).addTo(leafletMap.value);
+        // const polygonLayer = L.layerGroup() // A layer group stores polygon layers   
+        polygonLayer.addLayer(L.polygon(polygon)).addTo(toRaw(leafletMap.value));
     };
 
     // add tool marker layer
     const toolStore = useToolStore(); // Tool store
     const toolMarker = (tool: any) => {
-        // console.log("toolArray", toolArray);
-        const toolMarkerLayer = L.layerGroup() // A layer group stores tool markers
+        console.log("toolArray", tool);
+        // const toolMarkerLayer = L.layerGroup() // A layer group stores tool markers
 
-        if (tool.picture) {
-            const markerIcon = L.icon({
-                iconUrl: tool.picture,
-                iconSize: [32, 32]
+        if (tool.marker) { // marker existed
+            if (tool.picture) {
+                const markerIcon = L.icon({
+                    iconUrl: tool.picture,
+                    iconSize: [48, 48]
+                });
+                tool.marker.setIcon(markerIcon);
+            }
+
+            tool.marker.on('click', () => {
+                toolStore.selectedTool = tool;
+                toolStore.updateSelectedTool();
+                // console.log(toolStore.selectedTool);
             });
-            const toolCoord = { lat: tool.y, lng: tool.x }
-            tool.marker = L.marker(toolCoord).setIcon(markerIcon);
+
+            toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
+            toolMarkerLayer.addTo(toRaw(leafletMap.value));
+
+        } else { // marker not existed
+            if (tool.picture) {
+                const markerIcon = L.icon({
+                    iconUrl: tool.picture,
+                    iconSize: [48, 48]
+                });
+                const toolCoord = { lat: tool.y, lng: tool.x }
+                tool.marker = L.marker(toolCoord).setIcon(markerIcon);
+                tool.marker.setRotationOrigin('center center').setRotationAngle(tool.orientations[0]);
+            }
+            else {
+                const toolCoord = { lat: tool.y, lng: tool.x }
+                tool.marker = L.marker(toolCoord);
+                tool.marker.setRotationOrigin('center center').setRotationAngle(tool.orientations[0]);
+            }
+            tool.marker.on('click', () => {
+                toolStore.selectedTool = tool;
+                toolStore.updateSelectedTool();
+                // console.log(toolStore.selectedTool);
+            });
+            toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
+            toolMarkerLayer.addTo(toRaw(leafletMap.value));
         }
-        else {
-            const toolCoord = { lat: tool.y, lng: tool.x }
-            tool.marker = L.marker(toolCoord);
-        }
-        tool.marker.on('click', () => {
-            toolStore.selectedTool = tool;
-            toolStore.updateSelectedTool();
-            console.log(toolStore.selectedTool);
-        });
-        toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
-        toolMarkerLayer.addTo(leafletMap.value);;
+
     };
 
     // move marker to LatLng
     const updateMarkerLatLng = (tool: any, toolPose: any) => {
         // console.log(tool, toolPose);    
         const newLatLng = new L.LatLng(toolPose.lat, toolPose.lng);
-        tool.marker.setLatLng(newLatLng);
+        tool.marker.setRotationAngle(tool.orientations[0]).slideTo(newLatLng, { duration: 1000 });  
     };
 
-    // update map view
-    const updateMap = (originLat: number, originLon: number) => {
-        leafletMap.value.remove(); // Destroys current map and clears all related event listeners
-        initMap();
-        originLatLon.value = { lat: originLat, lon: originLon };
-        leafletMap.value.setView([originLatLon.value.lat, originLatLon.value.lon], zoomLevel);
-    }
+
 
     // Mount
     onMounted(() => {
@@ -353,64 +415,64 @@ Yard store contains states about helyOS agents, and provides operations for tool
 
     })
 
-Shape Store
------------
-Shape store contains a *shape* state to store all of helyOS shape objects, and provides operations to upload shapes into helyOS database or delete shapes from helyOS database.
+Map Object Store
+----------------
+Map object store contains a *mapObjects* state to store all of helyOS map objects, and provides operations to upload map objects into helyOS database or delete map objects from helyOS database.
 
-*./stores/shape-store.ts*
+*./stores/map-object-store.ts*
 
 .. code:: typescript
 
     import { defineStore } from 'pinia'
     import { ref } from 'vue'
-    import type { H_Shape } from 'helyosjs-sdk'
-    import { pushNewShape, deleteShape } from '@/services/helyos-service'
+    import type { H_MapObject } from 'helyosjs-sdk'
+    import { pushNewMapObject, deleteMapObject } from '@/services/helyos-service'
 
 
-    export const useShapeStore = defineStore('shape', () => {
-        // Initiate helyos shape store
-        const shapes = ref([] as H_Shape[]); // all of helyOS shape objects
+    export const useMapObjectStore = defineStore('map-object', () => {
+        // Initiate helyos map objects store
+        const mapObjects = ref([] as H_MapObject[]); // all of helyOS map object
 
-        // get shapes of selected yard from shape store
-        const filterShapeByYard = (yardId: string) => {
-            return shapes.value.filter((shape) => {
-                return shape.yardId === yardId;
+        // get map objects of selected yard from map object store
+        const filterMapObjectByYard = (yardId: string) => {
+            return mapObjects.value.filter((mapObject) => {
+                return mapObject.yardId === yardId;
             })
         }
 
-        // push new shape 
-        const pushShape = async (shape: any) => {
-            // push new shape into helyos database
-            const newShape = await pushNewShape(shape);
-            console.log(newShape);
+        // push new MapObject 
+        const pushMapObject = async (mapObject: any) => {
+            // push new MapObject into helyos database
+            const newMapObject = await pushNewMapObject(mapObject);
+            console.log(newMapObject);
 
-            // push new shape into shape store
-            if (newShape) {
-                shapes.value.push(newShape as H_Shape);
+            // push new MapObject into MapObject store
+            if (newMapObject) {
+                mapObjects.value.push(newMapObject);
                 alert("Push successfully!");
             } else {
                 alert("Push failed!")
             }
         }
 
-        // delete all shapes of selected yard
-        const deleteShapesByYard = (yardId: string) => {
-            // shapes to be deleted
-            const deleteGroup = filterShapeByYard(yardId);
+        // delete all MapObjects of selected yard
+        const deleteMapObjectsByYard = (yardId: string) => {
+            // MapObjects to be deleted
+            const deleteGroup = filterMapObjectByYard(yardId);
             console.log(deleteGroup);
 
             if (deleteGroup.length) {
-                deleteGroup.forEach((shape) => {
-                    // delete shape from helyos database
-                    deleteShape(shape.id);
+                deleteGroup.forEach((mapObject) => {
+                    // delete MapObject from helyos database
+                    deleteMapObject(mapObject.id);
 
-                    // delete shape from shape store
-                    const index = shapes.value.indexOf(shape);
+                    // delete MapObject from MapObject store
+                    const index = mapObjects.value.indexOf(mapObject);
                     if (index > -1) {
-                        shapes.value.splice(index, 1);
+                        mapObjects.value.splice(index, 1);
                     }
                 })
-                alert("Delete" + deleteGroup.length + " shape(s) successfully!")
+                alert("Delete" + deleteGroup.length + " MapObject(s) successfully!")
             }
             else {
                 alert("Nothing to be deleted!")
@@ -419,10 +481,10 @@ Shape store contains a *shape* state to store all of helyOS shape objects, and p
         }
 
         return {
-            shapes,
-            filterShapeByYard,
-            pushShape,
-            deleteShapesByYard,
+            mapObjects,
+            filterMapObjectByYard,
+            pushMapObject,
+            deleteMapObjectsByYard,
         }
 
     })

@@ -135,7 +135,7 @@ const uploadGeoJson = (ev: any) => {
         reader.readAsText(jsonFile);
         reader.onload = (file) => {
             // convert text to json object
-            geoJsonObj.value = JSON.parse(file.target?.result); // FeatureCollection from geojson/json file 
+            geoJsonObj.value = JSON.parse(file.target?.result as any); // FeatureCollection from geojson/json file 
             // display geojson object
             mapRef.value.geoJsonDisplay(geoJsonObj.value);
         }

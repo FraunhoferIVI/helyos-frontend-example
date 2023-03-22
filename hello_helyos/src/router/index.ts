@@ -10,7 +10,7 @@ const routes = [
         component: Login
     },
     {
-        path: '/demo',
+        path: '/',
         name: 'demo',
         component: Helyos
     }

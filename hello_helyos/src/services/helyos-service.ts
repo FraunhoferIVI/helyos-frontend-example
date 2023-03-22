@@ -25,7 +25,7 @@ export const helyosConnect = () => {
     const userStore = useUserStore();
     console.log("userStore", userStore.user);
 
-    if (userStore.user.token.jwtToken === helyosService.token) {
+    if (userStore.user.token === helyosService.token) {
         return helyosService.connect()
             .then(connected => {
 
@@ -86,6 +86,7 @@ export const pushNewMapObject = async (mapObject: H_MapObject) => {
     }
 }
 
+// delete mapObject by id
 export const deleteMapObject = async (mapObjectId: any) => {
     try {
         const deletedMapObject = await helyosService.mapObjects.delete(mapObjectId);

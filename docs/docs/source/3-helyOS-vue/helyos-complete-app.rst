@@ -287,7 +287,7 @@ Make sure to initialize helyOS connection and data fetching after login token co
 
         // login in successfully
         if (helyosToken) {
-            loginForm.value.token = helyosToken;
+            loginForm.value.token = helyosToken.jwtToken;
             // store user information
             userStore.setUser(loginForm.value);
 
@@ -331,6 +331,7 @@ Make sure to initialize helyOS connection and data fetching after login token co
     </style>
 
 
+
 Then, the browser will route to another component *Helyos.vue*, which is the main helyOS interface:
 
 *./components/Helyos.vue*
@@ -346,17 +347,17 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
     import * as HS from '@/services/helyos-service';
     import { useYardStore } from '@/stores/yard-store';
     import { useUserStore } from '@/stores/user-store';
-    import { useShapeStore } from '@/stores/shape-store';
+    import { useMapObjectStore } from '@/stores/map-object-store';
     import { useToolStore } from '@/stores/tool-store';
     import { useWorkProcessStore } from '@/stores/work-process-store';
     import { useLeafletMapStore } from '@/stores/leaflet-map-store';
 
     const mapStore = useLeafletMapStore(); // leaflet map store
-    const mapRef = ref(mapStore.leafletMap); // reactive variable of leaflet map
+    const mapRef = ref(); // reactive variable of leaflet map
 
     const userStore = useUserStore(); // helyos user store
     const yardStore = useYardStore(); // helyos yards Store
-    const shapeStore = useShapeStore();// helyos shapes store
+    const mapObjectStore = useMapObjectStore();// helyos map object store
     const toolStore = useToolStore(); // helyos tools store
     const workProcessStore = useWorkProcessStore(); // helyos work process store
 
@@ -373,8 +374,8 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
         }
         mapRef.value.updateMap(originLatLon.lat, originLatLon.lon);
 
-        // display shapes of current yard from shape store
-        initShapes();
+        // display MapObjects of current yard from MapObject store
+        initMapObjects();
 
         // display tools of current yard from tool store
         initTools();
@@ -442,15 +443,15 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
         }
     }
 
-    // initialize shapes layer
-    const initShapes = () => {
-        // get shapes from shape store
-        const shapes = shapeStore.filterShapeByYard(yardStore.selectedYard);
-        // if (yardStore.selectedYard === "4") { // geojson format shapes
-        console.log("shapes in current yard", shapes);
+    // initialize MapObjects layer
+    const initMapObjects = () => {
+        // get mapObjects from MapObject store
+        const mapObjects = mapObjectStore.filterMapObjectByYard(yardStore.selectedYard);
+        // if (yardStore.selectedYard === "4") { // geojson format MapObjects
+        console.log("MapObjects in current yard", mapObjects);
 
-        shapes.forEach((shape) => {
-            mapRef.value.geoJsonDisplay(shape.data);
+        mapObjects.forEach((mapObject) => {
+            mapRef.value.geoJsonDisplay(mapObject.data);
         })
 
         // clear temporary geojson object
@@ -474,7 +475,7 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
             reader.readAsText(jsonFile);
             reader.onload = (file) => {
                 // convert text to json object
-                geoJsonObj.value = JSON.parse(file.target?.result); // FeatureCollection from geojson/json file 
+                geoJsonObj.value = JSON.parse(file.target?.result as any); // FeatureCollection from geojson/json file 
                 // display geojson object
                 mapRef.value.geoJsonDisplay(geoJsonObj.value);
             }
@@ -485,25 +486,26 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
     }
 
     // push uploaded GeoJSON data to helyos database
-    const pushGeoJson = async() => {
+    const pushGeoJson = async () => {
         if (geoJsonObj.value) {
-            const newShape = {
+            const newMapObject = {
                 yardId: yardStore.selectedYard,
-                isObstacle: true,
+                // isObstacle: true,
                 type: "obstacle",
-                // dataFormat: "GeoJSON",
+                dataFormat: "GeoJSON",
+                name: "obstacle",
                 data: geoJsonObj.value
             }
-            console.log(newShape);
-            shapeStore.pushShape(newShape);
+            console.log(newMapObject);
+            mapObjectStore.pushMapObject(newMapObject);
         } else {
             alert("Push failed: please upload geojson file firstly.");
         }
     }
 
-    // delete all shapes of current yard
+    // delete all MapObjects of current yard
     const deleteGeoJson = () => {
-        shapeStore.deleteShapesByYard(yardStore.selectedYard);
+        mapObjectStore.deleteMapObjectsByYard(yardStore.selectedYard);
         initYard();
     }
 
@@ -513,18 +515,17 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
     const initMission = () => {
         console.log("mission", workProcessStore.selectedMission); // workProcessType.name
 
-        switch (workProcessStore.selectedMission) {
-            case "driving":
-                if (!toolStore.selectedTool) {
-                    requestMsg.value = "{\"results\": [{\"tool_id\": , \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
-                } else if (!mapStore.onClickCoords) {
-                    requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
-                } else {
-                    requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + mapStore.onClickCoords.lng + ", \"y\":" + mapStore.onClickCoords.lat + ", \"orientations\":[0,0] }}}]}";
-                }
-                break;
-            default:
-                requestMsg.value = "{}";
+        if (workProcessStore.selectedMission) { // if mission selected
+            if (!toolStore.selectedTool) { // if tool not selected
+                requestMsg.value = "{\"results\": [{\"tool_id\": , \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
+            } else if (!mapStore.onClickCoords) { // if map not clicked
+                requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
+            } else { // if tool, mission are selected and map clicked
+                requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + mapStore.onClickCoords.lng + ", \"y\":" + mapStore.onClickCoords.lat + ", \"orientations\":[0,0] }}}]}";
+            }
+        } else {
+
+            requestMsg.value = "{}";
         }
     }
 
@@ -534,7 +535,7 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
         (coords) => {
             if (!toolStore.selectedTool) {
                 alert("Please select a tool firstly!")
-            } else if (workProcessStore.selectedMission == "driving") {
+            } else if (workProcessStore.selectedMission) {
                 requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + coords.lng + ", \"y\":" + coords.lat + ", \"orientations\":[0,0] }}}]}";
             }
             // console.log("coords", coords);
@@ -559,6 +560,7 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
 
     }
 
+
     onMounted(() => {
         setTimeout(() => {
             initYard();
@@ -566,6 +568,7 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
     })
 
     </script>
+
 
 
 helyOS Hello World

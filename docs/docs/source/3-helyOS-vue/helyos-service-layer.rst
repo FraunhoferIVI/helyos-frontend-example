@@ -99,71 +99,72 @@ Then you can also fetch yards data by ``helyosjs-sdk``, and store yards data int
 
 Handling Map Objects
 --------------------
-*Shape* is the digital representation of any map object inside the yard. The data type of shapes can be defined by developers, and the common used is **JSON/GeoJSON**. 
+*MapObject* is the digital representation of any map object inside the yard. The data type of shapes can be defined by developers, and the common used is **JSON/GeoJSON**. 
 ``helyosjs-sdk`` provides methods to implement CRUD operations for shapes:
 
 *./services/helyos-service.ts*
 
 .. code:: typescript
 
-    import { HelyosServices, H_Shape } from 'helyosjs-sdk';
-    import { useShapeStore } from '@/stores/shape-store'
+    import { HelyosServices, H_MapObject } from 'helyosjs-sdk';
 
     // helyOS setup after connected
     const helyosSetup = () => {    
-        listShapes(); // fetch shapes from helyos
+        listMapObjects(); // fetch mapObjects from helyos
     }
 
-    ////////////////////////////Shapes////////////////////////////
-    // fetch all shapes from helyos
-    export const listShapes = async () => {
-        const shapeStore = useShapeStore();
-        const shapes = await helyosService.shapes.list({});
-        shapeStore.shapes = shapes;
-        console.log("shapes", shapeStore.shapes);
+    ////////////////////////////mapObjects////////////////////////////
+    // fetch mapObjects from helyos
+    export const listMapObjects = async () => {
+        const mapObjectStore = useMapObjectStore();
+        const mapObjects = await helyosService.mapObjects.list({});
+        mapObjectStore.mapObjects = mapObjects;
+        console.log("mapObjects", mapObjects);
     }
 
-    // fetch shapes from helyos by yard id
-    const listShapesByYardId = async (yardId: string) => {
-        const shapeStore = useShapeStore();
-        const shapes = await helyosService.shapes.list({ yardId: yardId });
-        shapeStore.shapes = shapes;
-        console.log(shapeStore.shapes);
+    // fetch mapObjects from helyos by yard id
+    const listMapObjectsByYardId = async (yardId: string) => {
+        const mapObjectStore = useMapObjectStore();
+        const mapObjects = await helyosService.mapObjects.list({ yardId: yardId });
+        mapObjectStore.mapObjects = mapObjects;
+        console.log(mapObjectStore.mapObjects);
     }
 
-    // create a new helyos shape
-    export const pushNewShape = async (shape: H_Shape) => {
+    // create a new helyos mapObject
+    export const pushNewMapObject = async (mapObject: H_MapObject) => {
         try {
-            const newShape = await helyosService.shapes.create(shape)
-            console.log("Push shape operation succeed!", newShape);
-            listShapes();
-            return newShape;
+            const newMapObject = await helyosService.mapObjects.create(mapObject)
+            console.log("Push mapObject operation succeed!", newMapObject);
+            listMapObjects();
+            return newMapObject;
         }
         catch {
-            console.log("Push shape operation failed!");
+            console.log("Push mapObject operation failed!");
         }
     }
 
-    export const deleteShape = async (shapeId: any) => {
+    // delete mapObject by id
+    export const deleteMapObject = async (mapObjectId: any) => {
         try {
-            const deletedShape = await helyosService.shapes.delete(shapeId);
-            console.log("Delete shape operation succeed!", deletedShape);
-            listShapes();
+            const deletedMapObject = await helyosService.mapObjects.delete(mapObjectId);
+            console.log("Delete mapObject operation succeed!", deletedMapObject);
+            listMapObjects();
         }
         catch {
-            console.log("Delete shape operation failed!");
+            console.log("Delete mapObject operation failed!");
         }
     }
 
 A shape example should be like:
 
-.. figure:: ./img/helyos_shape.png
+.. figure:: ./img/helyos_map_object.png
     :align: center
     :width: 800pt
 
-    A helyOS shape data structure
+    A helyOS map object data structure
 
-The property ``data`` or ``geometry`` can be used to store map objects ( *points, lines, polygons, ...* ).
+The property ``data`` can be used to store map objects ( *points, lines, polygons, ...* ).
+
 
 Retrieving Agent Data 
 ---------------------

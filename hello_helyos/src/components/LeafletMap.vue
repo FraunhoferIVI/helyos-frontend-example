@@ -63,6 +63,7 @@ const initMap = (): any => {
         layers: [osm]
     });
 
+    // layer control
     L.control.layers(baseMaps, overlays).addTo(toRaw(leafletMap.value));
 
 
@@ -71,7 +72,11 @@ const initMap = (): any => {
 
 // update map view
 const updateMap = (originLat: number, originLon: number) => {
-    leafletMap.value.remove(); // Destroys current map and clears all related event listeners
+    if (leafletMap.value) {
+        leafletMap.value.remove(); // Destroys current map and clears all related event listeners
+        toolMarkerLayer.remove();
+        polygonLayer.remove();
+    }
     initMap();
     originLatLon.value = { lat: originLat, lon: originLon };
     leafletMap.value.setView([originLatLon.value.lat, originLatLon.value.lon], zoomLevel);
@@ -133,25 +138,6 @@ const toolMarker = (tool: any) => {
     console.log("toolArray", tool);
     // const toolMarkerLayer = L.layerGroup() // A layer group stores tool markers
 
-    if (tool.marker) { // marker existed
-        if (tool.picture) {
-            const markerIcon = L.icon({
-                iconUrl: tool.picture,
-                iconSize: [48, 48]
-            });
-            tool.marker.setIcon(markerIcon);
-        }
-
-        tool.marker.on('click', () => {
-            toolStore.selectedTool = tool;
-            toolStore.updateSelectedTool();
-            // console.log(toolStore.selectedTool);
-        });
-
-        toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
-        toolMarkerLayer.addTo(toRaw(leafletMap.value));
-
-    } else { // marker not existed
         if (tool.picture) {
             const markerIcon = L.icon({
                 iconUrl: tool.picture,
@@ -173,7 +159,7 @@ const toolMarker = (tool: any) => {
         });
         toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
         toolMarkerLayer.addTo(toRaw(leafletMap.value));
-    }
+    
 
 };
 
@@ -186,11 +172,11 @@ const updateMarkerLatLng = (tool: any, toolPose: any) => {
 
 
 
-// Mount
-onMounted(() => {
-    initMap();
-    // geoJsonDisplay(testJson);
-});
+// // Mount
+// onMounted(() => {
+//     initMap();
+//     // geoJsonDisplay(testJson);
+// });
 
 // export default
 defineExpose({
