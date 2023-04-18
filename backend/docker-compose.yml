@@ -47,7 +47,7 @@ services:
 
 
     helyos_core:
-        image: helyos2020/helyos_core:1.8.0
+        image: helyosframework/helyos_core:2.0.0-beta
         container_name: helyos_core
 
         ports:
@@ -63,29 +63,35 @@ services:
 
         environment:
             # DATABASE 
-            - PGUSER=postgres 
-            - PGDRIVER=QPSQL
+            - PGUSER=postgres
             - PGPASSWORD=null
-            - PGHOST=db 
-            - PGDATABASE=autotruck 
+            - PGHOST=db
+            - PGDATABASE=autotruck
             - PGPORT=5432
+
+            # GRAPHQL VARIABLES
+            - GQLPORT=5000
 
             # RABBITMQ 
             - ENCRYPT=none  # none | agent | helyos | helyos-agent
-            - RABBITMQHOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
-            - RABBITMQPORT=5672
-            - RBMQ_API_PORT=15672       
+            - RBMQ_HOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
+            - RBMQ_PORT=5672
+            - RBMQ_API_PORT=15672    
 
+            # RABBITMQ 
+            # - ENCRYPT=none  # none | agent | helyos | helyos-agent
+            # - RABBITMQ_HOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
+            # - RABBITMQ_PORT=5672
 
             # RBMQ ACCOUNTS
             - CREATE_RBMQ_ACCOUNTS=True
             - RBMQ_ADMIN_USERNAME=${HELYOS_RBMQ_USERNAME} # set if CREATE_RBMQ_ACCOUNTS is True
             - RBMQ_ADMIN_PASSWORD=${HELYOS_RBMQ_PASSWORD} # set if CREATE_RBMQ_ACCOUNTS is True
+
             - RBMQ_USERNAME=${HELYOS_RBMQ_USERNAME}
             - RBMQ_PASSWORD=${HELYOS_RBMQ_PASSWORD}
             - ANY_AGENT_RBMQ_USERNAME=${AGENT_RBMQ_USERNAME}
             - ANY_AGENT_RBMQ_PASSWORD=${AGENT_RBMQ_PASSWORD}
-            - POSITION_MARGIN=2
 
             # AGENT => HELYOS
             - AGENTS_UL_EXCHANGE=${AGENTS_UL_EXCHANGE}
@@ -95,8 +101,6 @@ services:
             # HELYOS => AGENT
             - AGENTS_DL_EXCHANGE=${AGENTS_DL_EXCHANGE}
 
-            # GRAPHQL VARIABLES
-            - GQLPORT=5000
         networks:
             - control-tower-net
                
@@ -104,11 +108,10 @@ services:
             - db
             - local_message_broker
 
-
 networks:
     control-tower-net:
         name: control-tower-net
-        external: true
+        # external: true
 
 
 volumes:

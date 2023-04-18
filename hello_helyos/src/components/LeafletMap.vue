@@ -138,6 +138,25 @@ const toolMarker = (tool: any) => {
     console.log("toolArray", tool);
     // const toolMarkerLayer = L.layerGroup() // A layer group stores tool markers
 
+    if (tool.marker) { // marker existed
+        if (tool.picture) {
+            const markerIcon = L.icon({
+                iconUrl: tool.picture,
+                iconSize: [48, 48]
+            });
+            tool.marker.setIcon(markerIcon);
+        }
+
+        tool.marker.on('click', () => {
+            toolStore.selectedTool = tool;
+            toolStore.updateSelectedTool();
+            // console.log(toolStore.selectedTool);
+        });
+
+        toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
+        toolMarkerLayer.addTo(toRaw(leafletMap.value));
+
+    } else { // marker not existed
         if (tool.picture) {
             const markerIcon = L.icon({
                 iconUrl: tool.picture,
@@ -159,6 +178,8 @@ const toolMarker = (tool: any) => {
         });
         toolMarkerLayer.addLayer(tool.marker.bindPopup(tool.name));
         toolMarkerLayer.addTo(toRaw(leafletMap.value));
+    }
+
     
 
 };

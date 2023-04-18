@@ -10,7 +10,7 @@ services:
 
 
     agent_simulator:
-        image: helyos2020/helyos_agent_slim_simulator:0.2.5
+        image: helyosframework/helyos_agent_slim_simulator:0.3.0
 
         volumes:
             - ./custom-geometry.json:/app/geometry.json
@@ -20,32 +20,47 @@ services:
             # AGENT ID
             - UUID=Bb34069fc5-fdgs-434b-b87e-f19c5435113 
             - PATH_TRACKER=perfect  # perfect | straight_to_destination | stanley
-            - ASSIGNMENT_FORMAT=trajectory  # fixed | trajectory | destination | autotruck-path
-            - NAME='MY TRUCK'
+            - ASSIGNMENT_FORMAT=destination  # fixed | trajectory | destination | autotruck-path
+            - NAME='MY CAR'
             # - X0=0
-            - X0=13.741703018090716 #longitude
+            - X0=13.7373 #longitude
             # - Y0=0
-            - Y0=51.04745364968041 #latitude
+            - Y0=51.0504 #latitude
             - ORIENTATION=0
             - VELOCITY=1
+            - VEHICLE_PARTS=2
+            - YARD_UID=1
 
             # RABBITMQ 
             - ENCRYPT=none  # none | agent | helyos | helyos-agent
-            - RABBITMQHOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
-            - RABBITMQPORT=5672
+            - RABBITMQ_HOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
+            - RABBITMQ_PORT=5672
+
+            # - ENCRYPT=none  # none | agent | helyos | helyos-agent
+            # - RBMQ_HOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
+            # - RBMQ_PORT=5672
 
             # RBMQ ACCOUNT
-            - RBMQ_USERNAME=${HELYOS_RBMQ_USERNAME}
-            - RBMQ_PASSWORD=${HELYOS_RBMQ_PASSWORD}
+            - RBMQ_USERNAME=${RBMQ_USERNAME}
+            - RBMQ_PASSWORD=${RBMQ_PASSWORD}
             # OR
             - REGISTRATION_TOKEN=0000-0000-0000-0000-0000
 
         networks:
             - control-tower-net
+
+        # depends_on:
+        #     - helyos_core     
+
+        command: ["python","-u", "main.py"]
+
+        deploy:
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 10
+                window: 60s
                
-
-
-
 networks:
     control-tower-net:
         name: control-tower-net
