@@ -49,9 +49,6 @@ services:
         networks:
             - control-tower-net
 
-        # depends_on:
-        #     - helyos_core     
-
         command: ["python","-u", "main.py"]
 
         deploy:
