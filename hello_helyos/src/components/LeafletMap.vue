@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { onMounted, ref, toRaw } from 'vue';
 import "leaflet/dist/leaflet.css";
-import L, { type LatLngExpression } from "leaflet";
+import L, { LatLng, type LatLngExpression } from "leaflet";
 import CheapRuler from "cheap-ruler";
 import "leaflet.marker.slideto";
 import 'leaflet-rotatedmarker'
@@ -18,11 +18,24 @@ import { useLeafletMapStore } from '@/stores/leaflet-map-store';
 import { useToolStore } from '@/stores/tool-store';
 
 
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+const DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [24,36],
+    iconAnchor: [12,36]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
+
 const leafletMapStore = useLeafletMapStore(); // map store
 const leafletMap = ref(); // map ref
 const originLatLon = ref({ "lat": 51.0504, "lon": 13.7373 }); // yard 1
 const zoomLevel = 17;
 const toolMarkerLayer = new L.LayerGroup() // A layer group stores tool markers
+const destinationMarker = ref() // destination marker layer
 const polygonLayer = new L.LayerGroup() // A layer group stores map objects
 
 // initiate map
@@ -102,6 +115,19 @@ const onClickCoord = () => {
     })
 }
 
+// add a new marker
+const addMarker = (latlng: LatLng) => {
+    destinationMarker.value = L.marker(latlng).bindPopup("lat: " + latlng.lat + " lon: " + latlng.lng);
+    destinationMarker.value.addTo(leafletMap.value);
+}
+
+// clear marker layer
+const clearMarker = () => {
+    if (destinationMarker.value) {
+        destinationMarker.value.remove();
+    }
+}
+
 // convert LatLng to MM
 const convertLatLngToMM = (originLat: number, originLon: number, shapeLatLngPoints: number[][]) => {
     const ruler = new CheapRuler(originLat, 'meters'); // calculations around latitude 
@@ -142,7 +168,8 @@ const toolMarker = (tool: any) => {
         if (tool.picture) {
             const markerIcon = L.icon({
                 iconUrl: tool.picture,
-                iconSize: [48, 48]
+                iconSize: [48, 48],
+                iconAnchor: [24, 24]
             });
             tool.marker.setIcon(markerIcon);
         }
@@ -160,7 +187,8 @@ const toolMarker = (tool: any) => {
         if (tool.picture) {
             const markerIcon = L.icon({
                 iconUrl: tool.picture,
-                iconSize: [48, 48]
+                iconSize: [48, 48],
+                iconAnchor: [24, 24]
             });
             const toolCoord = { lat: tool.y, lng: tool.x }
             tool.marker = L.marker(toolCoord).setIcon(markerIcon);
@@ -207,7 +235,9 @@ defineExpose({
     toolMarker, // initiate markers representing tools
     updateMarkerLatLng, // update markers location based on tools location
     leafletMap, // leaflet map
-    clickedPoint // coords of clicked point
+    clickedPoint, // coords of clicked point.
+    addMarker, // add marker at destination
+    clearMarker // clear destination marker
 });
 
 </script>

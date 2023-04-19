@@ -197,6 +197,10 @@ const unwatchOnClickMap = watch(
             alert("Please select a tool firstly!")
         } else if (workProcessStore.selectedMission) {
             requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + coords.lng + ", \"y\":" + coords.lat + ", \"orientations\":[0,0] }}}]}";
+
+            // if destination marker exists, clear it
+            mapRef.value.clearMarker();
+            mapRef.value.addMarker(coords);
         }
         // console.log("coords", coords);
     }
