@@ -167,10 +167,10 @@ const toolSubscription = () => {
 const listWorkProcessType = async () => {
     const workProcessStore = useWorkProcessStore();
     const workProcessType = await helyosService.workProcessType.list({});
-    workProcessStore.workProcessType = workProcessType;
+    workProcessStore.workProcessType = workProcessType;    
 }
 
-export const dispatchWorkProcess = async (workProcess: H_WorkProcess) => {
+export const dispatchWorkProcess = async (workProcess: any) => {
     console.log(workProcess);
     return await helyosService.workProcess.create(workProcess)
 }

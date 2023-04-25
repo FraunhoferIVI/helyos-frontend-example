@@ -17,7 +17,7 @@ export const useWorkProcessStore = defineStore('work-process', ()=>{
             data: requestMsg,
             status: 'dispatched', 
         }
-        const missionLog = dispatchWorkProcess(workProcess.value as H_WorkProcess);  
+        const missionLog = dispatchWorkProcess(workProcess.value);  
         console.log(missionLog);
                 
     }

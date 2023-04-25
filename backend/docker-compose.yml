@@ -47,7 +47,7 @@ services:
 
 
     helyos_core:
-        image: helyosframework/helyos_core:2.0.0-beta
+        image: helyosframework/helyos_core:2.0.0-rc12
         container_name: helyos_core
 
         ports:
@@ -80,8 +80,8 @@ services:
 
             # RABBITMQ 
             # - ENCRYPT=none  # none | agent | helyos | helyos-agent
-            # - RABBITMQ_HOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
-            # - RABBITMQ_PORT=5672
+            - RABBITMQ_HOST=local_message_broker # local_message_broker | rabbitmq.ivi.fraunhofer.de 
+            - RABBITMQ_PORT=5672
 
             # RBMQ ACCOUNTS
             - CREATE_RBMQ_ACCOUNTS=True
@@ -111,7 +111,7 @@ services:
 networks:
     control-tower-net:
         name: control-tower-net
-        # external: true
+        external: true
 
 
 volumes:
