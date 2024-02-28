@@ -10,7 +10,8 @@ services:
 
     db:
         container_name: emons_db_host_address
-        image: postgres:10
+        image: postgres:13
+        # image: postgres:10
         ports:
             - "5432:5432"
         volumes:
@@ -47,7 +48,8 @@ services:
 
 
     helyos_core:
-        image: helyosframework/helyos_core:2.0.0-rc12
+        image: helyosframework/helyos_core:2.0.2
+        # image: helyosframework/helyos_core:2.0.0-rc12
         container_name: helyos_core
 
         ports:
