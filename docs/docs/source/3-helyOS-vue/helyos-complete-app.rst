@@ -52,7 +52,7 @@ Firstly, add some static resources into *assets* folder:
                         <label>
                             <input type="file" id="upload-icon-btn" class="custom-input" @change="updateToolIcon">
                             <label for="upload-icon-btn" class="custom-btn"
-                                @mouseenter="hintMsg = 'helyosService.tools.patch(tool: Partial<H_Tools>): Promise<any>'"
+                                @mouseenter="hintMsg = 'helyosService.agents.patch(tool: Partial<H_Agents>): Promise<any>'"
                                 @mouseleave="hintMsg = 'HelyOS'">Choose a file</label>
                         </label>
                     </div>

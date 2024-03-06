@@ -1,4 +1,4 @@
-import { HelyosServices, H_MapObject, H_Tools, H_WorkProcess } from 'helyosjs-sdk';
+import { HelyosServices, H_MapObject, H_Agents, H_WorkProcess } from 'helyosjs-sdk';
 import { useUserStore } from '@/stores/user-store';
 import { useYardStore } from '@/stores/yard-store'
 import { useToolStore } from '@/stores/tool-store';
@@ -102,16 +102,16 @@ export const deleteMapObject = async (mapObjectId: any) => {
 // fetch tools from helyos
 export const listTools = async () => {
     const toolStore = useToolStore();
-    const tools = await helyosService.tools.list({})
+    const tools = await helyosService.agents.list({})
     toolStore.tools = tools;
     console.log("tools", tools);
     return tools
 }
 
 // modify a tool
-export const patchTool = (tool: H_Tools) => {
+export const patchTool = (tool: H_Agents) => {
     try {
-        const newTool = helyosService.tools.patch(tool);
+        const newTool = helyosService.agents.patch(tool);
         console.log("Patch tool operation succeed!", newTool);
         return newTool;
     }

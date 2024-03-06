@@ -100,11 +100,11 @@ ALTER TABLE public.user_account ENABLE TRIGGER ALL;
 -- Data for Name: tools; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
--- ALTER TABLE public.tools DISABLE TRIGGER ALL;
+-- ALTER TABLE public.agents DISABLE TRIGGER ALL;
 
--- INSERT INTO public.tools VALUES (5, 'truck', '{"id": 1024, "axles": [{"id": 0, "position": {"x": 1400, "y": 0}, "steering": {"axle_type": "forced", "max_steer_angle": 1000, "steering_reference": "remote"}, "tire_width": 315, "tire_diameter": 1044, "wheel_positions": [1000, -1000]}, {"id": 4, "position": {"x": 7600, "y": 0}, "steering": {"axle_type": "fixed"}, "tire_width": 315, "tire_diameter": 1044, "wheel_positions": [1000, -1000]}], "width": 2500, "height": 3950, "length": 8500, "chassis_position": {"x": 0, "y": 0}, "ground_clearance": 300, "rear_joint_position": {"x": 8500, "y": 0}, "max_front_joint_angle": 0}', 'free', 'DD-HelyOS_2019', 'DD-HelyOS_2019', NULL, true, 2, -1257, -9554, 5495, '{}', '2020-06-08 12:12:57', NULL, '2020-06-08 12:12:57.345569', NULL);
+-- INSERT INTO public.agents VALUES (5, 'truck', '{"id": 1024, "axles": [{"id": 0, "position": {"x": 1400, "y": 0}, "steering": {"axle_type": "forced", "max_steer_angle": 1000, "steering_reference": "remote"}, "tire_width": 315, "tire_diameter": 1044, "wheel_positions": [1000, -1000]}, {"id": 4, "position": {"x": 7600, "y": 0}, "steering": {"axle_type": "fixed"}, "tire_width": 315, "tire_diameter": 1044, "wheel_positions": [1000, -1000]}], "width": 2500, "height": 3950, "length": 8500, "chassis_position": {"x": 0, "y": 0}, "ground_clearance": 300, "rear_joint_position": {"x": 8500, "y": 0}, "max_front_joint_angle": 0}', 'free', 'DD-HelyOS_2019', 'DD-HelyOS_2019', NULL, true, 2, -1257, -9554, 5495, '{}', '2020-06-08 12:12:57', NULL, '2020-06-08 12:12:57.345569', NULL);
 
--- ALTER TABLE public.tools ENABLE TRIGGER ALL;
+-- ALTER TABLE public.agents ENABLE TRIGGER ALL;
 
 --
 -- PostgreSQL database dump complete

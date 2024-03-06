@@ -193,7 +193,7 @@ You can use ``helyosjs-sdk`` interacting with the tools:
 
 .. code:: typescript
 
-    import { HelyosServices, H_Tools } from 'helyosjs-sdk';
+    import { HelyosServices, H_Agents } from 'helyosjs-sdk';
     import { useToolStore } from '@/stores/tool-store';
 
 
@@ -208,16 +208,16 @@ You can use ``helyosjs-sdk`` interacting with the tools:
     // fetch tools from helyos
     export const listTools = async () => {
         const toolStore = useToolStore();
-        const tools = await helyosService.tools.list({})
+        const tools = await helyosService.agents.list({})
         toolStore.tools = tools;
         console.log("tools", tools);
         return tools
     }
 
     // modify a tool
-    export const patchTool = (tool: H_Tools) => {
+    export const patchTool = (tool: H_Agents) => {
         try {
-            const newTool = helyosService.tools.patch(tool);
+            const newTool = helyosService.agents.patch(tool);
             console.log("Patch tool operation succeed!", newTool);
             return newTool;
         }
@@ -344,7 +344,7 @@ After defining missions and microservices enabled, you can use ``helyosjs-sdk`` 
 
     ////////////////////////////WorkProcess////////////////////////////
 
-    import { HelyosServices, H_Shape, H_Tools, H_WorkProcess } from 'helyosjs-sdk';
+    import { HelyosServices, H_Shape, H_Agents, H_WorkProcess } from 'helyosjs-sdk';
     import { useWorkProcessStore } from '@/stores/work-process-store';
 
     // helyOS setup after connected
