@@ -9,9 +9,9 @@ export const useWorkProcessStore = defineStore('work-process', ()=>{
     const workProcess = ref({}); // helyOS work process object
     const workProcessType = ref([] as H_WorkProcessType[]); // all work process types
 
-    const dispatchMission = (toolId: number, yardId: any, requestMsg: any, settingMsg: any) => {
+    const dispatchMission = (agentId: number, yardId: any, requestMsg: any, settingMsg: any) => {
         workProcess.value = {
-            toolIds: [toolId],
+            agentIds: [agentId],
             yardId: yardId,
             workProcessTypeName: selectedMission.value,
             data: requestMsg,

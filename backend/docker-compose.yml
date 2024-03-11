@@ -60,6 +60,8 @@ services:
 
         volumes:
             - "./licenses:/etc/helyos/licenses"
+            - ./licenses/microservices.yml:/etc/helyos/config/microservices.yml
+            - ./licenses/missions.yml:/etc/helyos/config/missions.yml
             - ./initial_data/db_initial_data:/etc/helyos/db_initial_data/
             - ./initial_data/helyos_keys/helyos_example_private.key:/etc/helyos/.ssl_keys/helyos_private.key:ro
 
