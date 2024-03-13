@@ -60,7 +60,7 @@ Firstly, add some static resources into *assets* folder:
                 <li id="tool-status-bar">
                     <div class="tool-status">Tool Status: {{ }}</div>
                     <div class="tool-status"
-                        @mouseenter="hintMsg = 'helyosService.socket.on(\'new_tool_poses\', (updates: any) => { console.log(updates); }'"
+                        @mouseenter="hintMsg = 'helyosService.socket.on(\'new_agent_poses\', (updates: any) => { console.log(updates); }'"
                         @mouseleave="hintMsg = 'HelyOS'">
                         {{ toolStore.selectedToolInfo }}
                     </div>

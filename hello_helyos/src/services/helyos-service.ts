@@ -126,7 +126,7 @@ const toolSubscription = () => {
     const toolStore = useToolStore();
 
     socket.on('new_agent_poses', (updates: any) => {
-        // console.log('new_tool_poses', updates); // Notifications from tool sensors.
+        // console.log('new_agent_poses', updates); // Notifications from tool sensors.
 
         // update poses into toolStore
         updates.forEach((agentUpdate: any) => {

@@ -215,11 +215,11 @@ You can use ``helyosjs-sdk`` interacting with the tools:
     const toolSubscription = () => {
         const socket = helyosService.socket;
         
-        socket.on('new_tool_poses', (updates: any) => {
-            console.log('new_tool_poses', updates); // Notifications from tool sensors.
+        socket.on('new_agent_poses', (updates: any) => {
+            console.log('new_agent_poses', updates); // Notifications from tool sensors.
         });
-        socket.on('change_tool_status', (updates: any) => {
-            console.log('change_tool_status', updates); // Notifications from tools working status.
+        socket.on('change_agent_status', (updates: any) => {
+            console.log('change_agent_status', updates); // Notifications from tools working status.
         });
         socket.on('change_work_processes', (updates: any) => {
             console.log('change_work_processes', updates);  // Notifications from work processes status.

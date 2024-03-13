@@ -49,8 +49,6 @@ const initTools = () => {
     console.log("tools in current yard", tools);
     tools.forEach((tool) => {
         mapRef.value.toolMarker(tool);
-        console.log("tool:");
-        console.log(tool);
     })
 }
 
