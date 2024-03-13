@@ -6,10 +6,10 @@ services:
       is_dummy: false
       domain: "Assignment planner"  # Assignment planner | Map Server | Storage server
       type: "drive"
-      url: https://trucktrix.ivi.fraunhofer.de/trucktrix-path-api/
+      url: "https://trucktrix.ivi.fraunhofer.de/trucktrix-path-api/"
       enable: true
-      apikey: "Sy40lwSmMFdix9lihdBiCbvU2hVEeY7t"
-      timeout: 300
+      apikey: "requiredpassword"
+      timeout: 180
       
       context:
         map_data: true
@@ -17,17 +17,16 @@ services:
         mission_agents_data: true
         
       config: >
-            {"trucktrix_planner_type": "all_directions",
-              "output_format" :"trucktrix-ivi"}
+            {"trucktrix_planner_type": "all_directions"}
 
     my drive:
-      is_dummy: false
+      is_dummy: true
       domain: "Assignment planner"  # Assignment planner | Map Server | Storage server
       type: "my_driving"
       url: ""
       enable: true
       apikey: ""
-      timeout: 300
+      timeout: 180
       
       context:
         map_data: true

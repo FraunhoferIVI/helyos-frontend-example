@@ -4,15 +4,12 @@ missions:
 
     driving:
       maxagents: 1
-      description: "get a path from trucktrix and send to agent"
-      settings: >
-            {"interface": "webbrowser",
-              "auth" :"required"}
+      description: "drive from a to b"
       
       recipe:
         steps:
           - step: "A"
-            service_type: "drive"
+            service_type: "my_driving"
             request_order: 1
             apply_result: true
             override_config: "{}"
