@@ -100,5 +100,8 @@ Features included in hello helyOS:
 ## Author
 - [Jiapan Wang](https://github.com/Wjppppp)
 
+## Contributor
+- [Pruthul Pradeep Andy](https://github.com/pruthulpa07)
+
 ## License
 This project is licensed under the MIT License
