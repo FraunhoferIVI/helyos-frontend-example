@@ -49,6 +49,8 @@ const initTools = () => {
     console.log("tools in current yard", tools);
     tools.forEach((tool) => {
         mapRef.value.toolMarker(tool);
+        console.log("tool:");
+        console.log(tool);
     })
 }
 
@@ -60,7 +62,6 @@ const unwatch = watch(
         if (ifSubscription && yardStore.selectedYard) {
 
             toolStore.tools.forEach((tool) => {
-                console.log(tool);
 
                 if ('marker' in tool) {
                     const toolPose = {
@@ -68,7 +69,6 @@ const unwatch = watch(
                         lng: tool.x
                     }
                     mapRef.value.updateMarkerLatLng(tool, toolPose);
-                    console.log("moving marker");
                 }
 
                 if (toolStore.selectedTool) {

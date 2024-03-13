@@ -74,7 +74,8 @@ export const useToolStore = defineStore('tool', () => {
             // sensors: selectedTool.value.sensors,
             lat: selectedTool.value.y,
             lon: selectedTool.value.x,
-            orientation: selectedTool.value.orientation,
+            // orientation: selectedTool.value.orientation,
+            orientations: selectedTool.value.orientations,
             yardId: selectedTool.value.yardId
         }
     }
