@@ -130,8 +130,7 @@ const toolSubscription = () => {
 
         // update poses into toolStore
         updates.forEach((agentUpdate: any) => {
-            // console.log(agentUpdate);
-            const agent = toolStore.tools.find(tool => tool.id === agentUpdate.toolId);
+            const agent = toolStore.tools.find(tool => Number(tool.id) === agentUpdate.toolId);
             if (agent) {
                 toolStore.ifSubscription = 1;
                 agent.x = agentUpdate.x;
