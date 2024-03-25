@@ -277,7 +277,7 @@ After defining missions and microservices enabled, you can use ``helyosjs-sdk`` 
 
     ////////////////////////////WorkProcess////////////////////////////
 
-    import { HelyosServices, H_Shape, H_Agents, H_WorkProcess } from 'helyosjs-sdk';
+    import { HelyosServices, H_MapObject, H_Agents, H_WorkProcess } from 'helyosjs-sdk';
 
     // helyOS setup after connected
     const helyosSetup = () => {

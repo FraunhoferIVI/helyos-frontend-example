@@ -26,10 +26,10 @@
                     <!-- </div>
                     <div> -->
                     <button class="custom-btn" id="push-geojson-btn" @click="pushGeoJson"
-                        @mouseenter="hintMsg = 'helyosService.shapes.create(shape: Partial<H_Shape>): Promise<any>'"
+                        @mouseenter="hintMsg = 'helyosService.mapObjects.create(shape: Partial<H_MapObject>): Promise<any>'"
                         @mouseleave="hintMsg = 'HelyOS'">Push</button>
                     <button class="custom-btn" id="delete-geojson-btn" @click="deleteGeoJson"
-                        @mouseenter="hintMsg = 'helyosService.shapes.delete(shapeId: any): Promise<any>'"
+                        @mouseenter="hintMsg = 'helyosService.mapObjects.delete(shapeId: any): Promise<any>'"
                         @mouseleave="hintMsg = 'HelyOS'">Delete</button>
                 </div>
             </li>
