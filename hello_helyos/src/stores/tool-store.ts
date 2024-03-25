@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useYardStore } from './yard-store'
-import type { H_Tools } from 'helyosjs-sdk'
+import type { H_Agents } from 'helyosjs-sdk'
 import { patchTool, helyosService } from '@/services/helyos-service'
 
 export const useToolStore = defineStore('tool', () => {
     // Initiate helyos tool store
-    const tools = ref([] as H_Tools[]); // all of helyOS agent objects
+    const tools = ref([] as H_Agents[]); // all of helyOS agent objects
     const ifSubscription = ref(0); // if 1, subscribe the pose updates of all tools, if 0, cancel the subscription
     const selectedTool = ref(); // selected tool
     const selectedToolInfo = ref(); // shown information of selected tool
@@ -24,7 +24,7 @@ export const useToolStore = defineStore('tool', () => {
 
     // patch all tools
     const patchToolIcon = (icon: any) => {
-        tools.value.forEach((tool: H_Tools) => {
+        tools.value.forEach((tool: H_Agents) => {
             // update icon of tool in tool store
             tool.picture = icon;
 
@@ -40,7 +40,7 @@ export const useToolStore = defineStore('tool', () => {
     }
 
     // convert coordinate from trucktrix format to latlng
-    const convertToolToLatLng = (tool: H_Tools) => {
+    const convertToolToLatLng = (tool: H_Agents) => {
         const yardStore = useYardStore();
         const currentYard = yardStore.getCurrentYard();
         const toolLatLng = helyosService.convertMMtoLatLng(currentYard[0].lat, currentYard[0].lon, [[tool.x as number, tool.y as number]]);
@@ -74,7 +74,8 @@ export const useToolStore = defineStore('tool', () => {
             // sensors: selectedTool.value.sensors,
             lat: selectedTool.value.y,
             lon: selectedTool.value.x,
-            orientation: selectedTool.value.orientation,
+            // orientation: selectedTool.value.orientation,
+            orientations: selectedTool.value.orientations,
             yardId: selectedTool.value.yardId
         }
     }

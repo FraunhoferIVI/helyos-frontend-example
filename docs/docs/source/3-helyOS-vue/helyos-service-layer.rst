@@ -193,7 +193,7 @@ You can use ``helyosjs-sdk`` interacting with the tools:
 
 .. code:: typescript
 
-    import { HelyosServices, H_Tools } from 'helyosjs-sdk';
+    import { HelyosServices, H_Agents } from 'helyosjs-sdk';
     import { useToolStore } from '@/stores/tool-store';
 
 
@@ -208,16 +208,16 @@ You can use ``helyosjs-sdk`` interacting with the tools:
     // fetch tools from helyos
     export const listTools = async () => {
         const toolStore = useToolStore();
-        const tools = await helyosService.tools.list({})
+        const tools = await helyosService.agents.list({})
         toolStore.tools = tools;
         console.log("tools", tools);
         return tools
     }
 
     // modify a tool
-    export const patchTool = (tool: H_Tools) => {
+    export const patchTool = (tool: H_Agents) => {
         try {
-            const newTool = helyosService.tools.patch(tool);
+            const newTool = helyosService.agents.patch(tool);
             console.log("Patch tool operation succeed!", newTool);
             return newTool;
         }
@@ -230,11 +230,11 @@ You can use ``helyosjs-sdk`` interacting with the tools:
     const toolSubscription = () => {
         const socket = helyosService.socket;
         
-        socket.on('new_tool_poses', (updates: any) => {
-            console.log('new_tool_poses', updates); // Notifications from tool sensors.
+        socket.on('new_agent_poses', (updates: any) => {
+            console.log('new_agent_poses', updates); // Notifications from tool sensors.
         });
-        socket.on('change_tool_status', (updates: any) => {
-            console.log('change_tool_status', updates); // Notifications from tools working status.
+        socket.on('change_agent_status', (updates: any) => {
+            console.log('change_agent_status', updates); // Notifications from tools working status.
         });
         socket.on('change_work_processes', (updates: any) => {
             console.log('change_work_processes', updates);  // Notifications from work processes status.
@@ -250,9 +250,9 @@ With agents listeners, your could track the status and location and agents. As a
         const socket = helyosService.socket;
         const toolStore = useToolStore();
         const yardStore = useYardStore();
-        socket.on('new_tool_poses', (updates: any) => {
+        socket.on('new_agent_poses', (updates: any) => {
 
-            // console.log('new_tool_poses', updates); // Notifications from tool sensors.
+            // console.log('new_agent_poses', updates); // Notifications from tool sensors.
             updates.forEach((agentUpdate: any) => {
                 // console.log(agentUpdate);
                 const agent = toolStore.tools.find(tool => tool.id === agentUpdate.toolId);
@@ -286,8 +286,8 @@ With agents listeners, your could track the status and location and agents. As a
             // console.log("tool store", toolStore.tools);
 
         });
-        socket.on('change_tool_status', (updates: any) => {
-            console.log('change_tool_status', updates); // Notifications from tools working status.
+        socket.on('change_agent_status', (updates: any) => {
+            console.log('change_agent_status', updates); // Notifications from tools working status.
         });
         socket.on('change_work_processes', (updates: any) => {
             console.log('change_work_processes', updates);  // Notifications from work processes status.
@@ -344,7 +344,7 @@ After defining missions and microservices enabled, you can use ``helyosjs-sdk`` 
 
     ////////////////////////////WorkProcess////////////////////////////
 
-    import { HelyosServices, H_Shape, H_Tools, H_WorkProcess } from 'helyosjs-sdk';
+    import { HelyosServices, H_Shape, H_Agents, H_WorkProcess } from 'helyosjs-sdk';
     import { useWorkProcessStore } from '@/stores/work-process-store';
 
     // helyOS setup after connected

@@ -334,7 +334,7 @@ There are several important model types among helyOS, that you can refer to `hel
 +================+================================================================+
 | H_Yard         | Physical space enclosing tools in a drivable area.             |
 +----------------+----------------------------------------------------------------+
-| H_Tools        | Tool represents any movable device that can perform an action  |
+| H_Agents        | Tool represents any movable device that can perform an action  |
 +----------------+----------------------------------------------------------------+
 | H_Shape        | Define drivable areas or obstacles inside the yard.            |
 +----------------+----------------------------------------------------------------+

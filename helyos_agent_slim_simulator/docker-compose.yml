@@ -10,7 +10,7 @@ services:
 
 
     agent_simulator:
-        image: helyosframework/helyos_agent_slim_simulator:0.3.0
+        image: helyosframework/helyos_agent_slim_simulator:0.7.5
 
         volumes:
             - ./custom-geometry.json:/app/geometry.json

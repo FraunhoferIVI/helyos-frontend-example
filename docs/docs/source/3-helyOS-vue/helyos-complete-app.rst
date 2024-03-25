@@ -52,7 +52,7 @@ Firstly, add some static resources into *assets* folder:
                         <label>
                             <input type="file" id="upload-icon-btn" class="custom-input" @change="updateToolIcon">
                             <label for="upload-icon-btn" class="custom-btn"
-                                @mouseenter="hintMsg = 'helyosService.tools.patch(tool: Partial<H_Tools>): Promise<any>'"
+                                @mouseenter="hintMsg = 'helyosService.agents.patch(tool: Partial<H_Agents>): Promise<any>'"
                                 @mouseleave="hintMsg = 'HelyOS'">Choose a file</label>
                         </label>
                     </div>
@@ -60,7 +60,7 @@ Firstly, add some static resources into *assets* folder:
                 <li id="tool-status-bar">
                     <div class="tool-status">Tool Status: {{ }}</div>
                     <div class="tool-status"
-                        @mouseenter="hintMsg = 'helyosService.socket.on(\'new_tool_poses\', (updates: any) => { console.log(updates); }'"
+                        @mouseenter="hintMsg = 'helyosService.socket.on(\'new_agent_poses\', (updates: any) => { console.log(updates); }'"
                         @mouseleave="hintMsg = 'HelyOS'">
                         {{ toolStore.selectedToolInfo }}
                     </div>
@@ -517,11 +517,11 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
 
         if (workProcessStore.selectedMission) { // if mission selected
             if (!toolStore.selectedTool) { // if tool not selected
-                requestMsg.value = "{\"results\": [{\"tool_id\": , \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
+                requestMsg.value = "{\"results\": [{\"agent_id\": , \"assignment\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
             } else if (!mapStore.onClickCoords) { // if map not clicked
-                requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
+                requestMsg.value = "{\"results\": [{\"agent_id\": " + toolStore.selectedTool.id + ", \"assignment\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
             } else { // if tool, mission are selected and map clicked
-                requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + mapStore.onClickCoords.lng + ", \"y\":" + mapStore.onClickCoords.lat + ", \"orientations\":[0,0] }}}]}";
+                requestMsg.value = "{\"results\": [{\"agent_id\": " + toolStore.selectedTool.id + ", \"assignment\": { \"destination\": { \"x\":" + mapStore.onClickCoords.lng + ", \"y\":" + mapStore.onClickCoords.lat + ", \"orientations\":[0,0] }}}]}";
             }
         } else {
 
@@ -536,7 +536,7 @@ Then, the browser will route to another component *Helyos.vue*, which is the mai
             if (!toolStore.selectedTool) {
                 alert("Please select a tool firstly!")
             } else if (workProcessStore.selectedMission) {
-                requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + coords.lng + ", \"y\":" + coords.lat + ", \"orientations\":[0,0] }}}]}";
+                requestMsg.value = "{\"results\": [{\"agent_id\": " + toolStore.selectedTool.id + ", \"assignment\": { \"destination\": { \"x\":" + coords.lng + ", \"y\":" + coords.lat + ", \"orientations\":[0,0] }}}]}";
             }
             // console.log("coords", coords);
         }

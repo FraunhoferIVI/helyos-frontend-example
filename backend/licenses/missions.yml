@@ -1,0 +1,16 @@
+version: '2.0'
+
+missions:
+
+    driving:
+      maxagents: 1
+      description: "drive from a to b"
+      
+      recipe:
+        steps:
+          - step: "A"
+            service_type: "my_driving"
+            request_order: 1
+            apply_result: true
+            override_config: "{}"
+          

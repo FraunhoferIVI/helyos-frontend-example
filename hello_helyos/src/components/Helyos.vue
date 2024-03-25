@@ -177,11 +177,11 @@ const initMission = () => {
 
     if (workProcessStore.selectedMission) { // if mission selected
         if (!toolStore.selectedTool) { // if tool not selected
-            requestMsg.value = "{\"results\": [{\"tool_id\": , \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
+            requestMsg.value = "{\"results\": [{\"agent_id\": , \"assignment\": { \"operation\":\"driving\", \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
         } else if (!mapStore.onClickCoords) { // if map not clicked
-            requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
+            requestMsg.value = "{\"results\": [{\"agent_id\": " + toolStore.selectedTool.id + ", \"assignment\": { \"operation\":\"driving\", \"destination\": { \"x\": , \"y\": , \"orientations\":[0,0] }}}]}";
         } else { // if tool, mission are selected and map clicked
-            requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + mapStore.onClickCoords.lng + ", \"y\":" + mapStore.onClickCoords.lat + ", \"orientations\":[0,0] }}}]}";
+            requestMsg.value = "{\"results\": [{\"agent_id\": " + toolStore.selectedTool.id + ", \"assignment\": { \"operation\":\"driving\", \"destination\": { \"x\":" + mapStore.onClickCoords.lng + ", \"y\":" + mapStore.onClickCoords.lat + ", \"orientations\":[0,0] }}}]}";
         }
     } else {
 
@@ -196,7 +196,7 @@ const unwatchOnClickMap = watch(
         if (!toolStore.selectedTool) {
             alert("Please select a tool firstly!")
         } else if (workProcessStore.selectedMission) {
-            requestMsg.value = "{\"results\": [{\"tool_id\": " + toolStore.selectedTool.id + ", \"result\": { \"destination\": { \"x\":" + coords.lng + ", \"y\":" + coords.lat + ", \"orientations\":[0,0] }}}]}";
+            requestMsg.value = "{\"results\": [{\"agent_id\": " + toolStore.selectedTool.id + ", \"assignment\": { \"operation\":\"driving\", \"destination\": { \"x\":" + coords.lng + ", \"y\":" + coords.lat + ", \"orientations\":[0,0] }}}]}";
 
             // if destination marker exists, clear it
             mapRef.value.clearMarker();
